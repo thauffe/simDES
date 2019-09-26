@@ -12,7 +12,7 @@ get_gamma_rates(alpha, Ncat)
 \item{Ncat}{Number of categories for the discretized Gamma distribution}
 }
 \value{
-Discretized gamma distribution
+Discretized Gamma distribution
 }
 \description{
 This function discretizes the Gamma distribution and

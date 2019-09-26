@@ -7,7 +7,7 @@
 #' @param alpha i.e. the shape and rate of the Gamma distribution
 #' @param Ncat Number of categories for the discretized Gamma distribution
 #'
-#' @return Discretized gamma distribution
+#' @return Discretized Gamma distribution
 #'
 #' @author Torsten Hauffe
 #'
