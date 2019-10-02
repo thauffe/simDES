@@ -1,4 +1,5 @@
-bin_covariate <- function(TimeSim, Cov)
+bin_covariate <- function(TimeSim,
+                          Cov)
 {
   # TimeSim Time trajectory (vector)
   # Cov Covariate for dispersal extinction (data.frame with time and covariate)

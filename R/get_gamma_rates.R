@@ -17,7 +17,8 @@
 #' Molecular Biology and Evolution 10(6): 1396-1401.
 #'
 #' @export get_gamma_rates
-get_gamma_rates <- function(alpha, Ncat)
+get_gamma_rates <- function(alpha,
+                            Ncat)
 {
   SeqGamma <- seq(0, 1, length.out = Ncat + 1)
   YangGammaQuant <- (SeqGamma - SeqGamma[2]/2)[-1]

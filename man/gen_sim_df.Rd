@@ -4,18 +4,18 @@
 \alias{gen_sim_df}
 \title{Template to simulate fossil biogeography}
 \usage{
-gen_sim_df(Time, Step, Nspecies, Origin = "random", Covariate = NULL)
+gen_sim_df(TimeSim, Nspecies, Origin = "random", Qtimes = NULL,
+  Covariate = NULL, DataInArea = NULL, Ncat = NULL)
 }
 \arguments{
-\item{Time}{Positive number indicating the}
-
-\item{Step}{Time steps for the simulation.}
+\item{TimeSim}{Time steps for the simulation}
 
 \item{Nspecies}{Number of species}
 
-\item{Origin}{Area of origin \cr Options '1', '2' or '3'}
+\item{Origin}{Area of origin \cr Options 'random', '1', or '2'}
 
-\item{Covariate}{Covariate for e.g. environmental dependent dispersal or extinction}
+\item{Covariate}{data.frame with the covariate for
+e.g. environmental dependent dispersal or extinction}
 }
 \value{
 A data.frame
