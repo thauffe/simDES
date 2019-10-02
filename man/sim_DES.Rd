@@ -43,7 +43,8 @@ e.g. environmental dependent dispersal or extinction}
 
 \item{DataInArea}{Simulate dynamic in that area}
 
-\item{Ncat}{Number of categories for the discretized Gamma distribution}
+\item{Ncat}{Number of categories for the discretized Gamma distribution
+to simulate heterogeneous sampling}
 
 \item{alpha}{i.e. the shape and rate of the Gamma distribution}
 }

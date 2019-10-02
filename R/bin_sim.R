@@ -8,7 +8,7 @@ bin_sim <- function(SimDf, BinSize, TimeSim)
   SimDfBinned <- aggregate(SimDf[, c(3, 8)],
                            by = list(SimDf$BinsDesInput, SimDf$subject),
                            FUN = get_binned_range)
-  colnames(SimDfBinned)[1:2] <- c("BinnedTime", "Species")
+  colnames(SimDfBinned)[1:2] <- c("BinnedTimeIndex", "Species")
   return(SimDfBinned)
 }
 

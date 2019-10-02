@@ -9,7 +9,7 @@ get_DES_input <- function(SimDfBinned, Time, BinSize, Nspecies, Distribution = "
   for(i in 1:Nspecies){
     Species <- SimDfBinned[SimDfBinned$Species == i, ]
     #DesInput[i, 1 + findInterval(Species$BinnedTime, BinnedTime)] <- Species[, Distribution] - 1 # 1:4 -> 0:3
-    DesInput[i, 1 + Species$BinnedTime] <- Species[, Distribution] - 1 # 1:4 -> 0:3
+    DesInput[i, 1 + Species$BinnedTimeIndex] <- Species[, Distribution] - 1 # 1:4 -> 0:3
   }
   DesInput <- DesInput[rowSums(DesInput[, -1], na.rm = TRUE) > 0, ]
   return(DesInput)

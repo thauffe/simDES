@@ -20,6 +20,7 @@
 #' @param Cor Correlation with environment or diversity \cr Options 'linear' or 'exponential'
 #' @param DataInArea Simulate dynamic in that area
 #' @param Ncat  Number of categories for the discretized Gamma distribution
+#' to simulate heterogeneous sampling
 #' @param alpha i.e. the shape and rate of the Gamma distribution
 #'
 #' @return A data.frame
@@ -50,6 +51,10 @@ sim_DES <- function(Time,
   {
     stop("Step size larger than time")
   }
+  if (Step > BinSize)
+  {
+    stop("Step size larger than bin size")
+  }
   if (BinSize > Time)
   {
     stop("BinSize larger than time")
@@ -58,12 +63,30 @@ sim_DES <- function(Time,
   {
     stop("Step size small 1e-10 not possible")
   }
+  if (!Origin %in% c("random", "2", "3"))
+  {
+    stop("Origin should be random, 2, or 3")
+  }
+  if ( (!is.null(VarD) & length(SimD) > 2) | (!is.null(DivD) & length(SimD) > 2) )
+  {
+    stop("Covariate/Diversity dependent dispersal and shifts in dispersal rate not compatible")
+  }
+  if ( (!is.null(VarE) & length(SimE) > 2) | (!is.null(DivE) & length(SimE) > 2) )
+  {
+    stop("Covariate/Diversity dependent extinction and shifts in extinction rate not compatible")
+  }
+  if ( sum(is.null(Ncat), is.null(alpha)) == 1 )
+  {
+    stop("Ncat and alpha need to be provided for sampling heterogeneity")
+  }
 
   if (!is.null(Qtimes))
   {
     Qtimes <- Time - Qtimes
   }
   TimeSim <- seq(0, Time, by = Step)
+  Decimals <- nchar(gsub("(.*\\.)|([0]*$)", "", as.character(Step)))
+  TimeSim <- round(TimeSim, digits = Decimals)
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes, Covariate, DataInArea, Ncat)
   SimDf <- sim_core(SimDf, SimD, SimE)
   SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha)
