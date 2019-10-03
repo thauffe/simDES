@@ -42,8 +42,8 @@ gen_sim_df <- function(TimeSim,
 
     } else
     {
-      TimeSimSpecies <- seq(0, Time, by = Step)
-      Origin <- DataInArea
+      TimeSimSpecies <- TimeSim #seq(0, Time, by = Step)
+      Origin <- DataInArea + 1
     }
 
     if (!is.null(Covariate))

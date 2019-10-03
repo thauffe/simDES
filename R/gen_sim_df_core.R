@@ -13,7 +13,7 @@ gen_sim_df_cor <- function(TimeSim,
     Start <- sample(2:3, 1)
   } else
   {
-    Start <- as.numeric(Origin)
+    Start <- as.numeric(Origin) + 1
   }
 
   if (is.null(CovBinned))

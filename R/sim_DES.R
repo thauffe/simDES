@@ -63,9 +63,9 @@ sim_DES <- function(Time,
   {
     stop("Step size small 1e-10 not possible")
   }
-  if (!Origin %in% c("random", "2", "3"))
+  if (!Origin %in% c("random", "1", "2"))
   {
-    stop("Origin should be random, 2, or 3")
+    stop("Origin should be random, 1, or 2")
   }
   if ( (!is.null(VarD) & length(SimD) > 2) | (!is.null(DivD) & length(SimD) > 2) )
   {
@@ -78,6 +78,14 @@ sim_DES <- function(Time,
   if ( sum(is.null(Ncat), is.null(alpha)) == 1 )
   {
     stop("Ncat and alpha need to be provided for sampling heterogeneity")
+  }
+  if (DataInArea == 1)
+  {
+    Origin <- "2"
+  }
+  if (DataInArea == 2)
+  {
+    Origin <- "1"
   }
 
   if (!is.null(Qtimes))
@@ -92,5 +100,14 @@ sim_DES <- function(Time,
   SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
   DesInput <- get_DES_input(SimDfBinned, Time, BinSize, Nspecies, Distribution = "stateSampling")
-  return(DesInput)
+  Res <- vector("list", length = 2)
+  Res[[1]] <- DesInput
+  SimDf$time <- Time - SimDf$time
+  SimDf$state <- as.numeric(SimDf$state) - 1
+  SimDf$stateSampling <- as.numeric(SimDf$stateSampling) - 1
+  colnames(SimDf) <- c("Species", "Time", "RangeSim",
+                       "Covariate", "DiversityA", "DiversityB",
+                       "Strata", "RangeObs", "GammaCat")
+  Res[[2]] <- SimDf
+  return(Res)
 }
