@@ -79,13 +79,16 @@ sim_DES <- function(Time,
   {
     stop("Ncat and alpha need to be provided for sampling heterogeneity")
   }
-  if (DataInArea == 1)
+  if (!is.null(DataInArea))
   {
-    Origin <- "2"
-  }
-  if (DataInArea == 2)
-  {
-    Origin <- "1"
+    if (DataInArea == 1)
+    {
+      Origin <- "2"
+    }
+    if (DataInArea == 2)
+    {
+      Origin <- "1"
+    }
   }
 
   if (!is.null(Qtimes))
