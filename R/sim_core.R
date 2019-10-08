@@ -22,19 +22,46 @@ sim_core <- function(SimDf,
     Start <- SimDf[SimDf$time == UniqueTime[i - 1] & SimDf$subject %in% Species, "state"]
     Strata <- SimDf[SimDf$time == UniqueTime[i], "Strata"][1]
     IdxDES <- (2 * Strata - 1):(2 * Strata)
-    if (is.null(VarD))
+    # No covariation with dispersal
+    if (is.null(VarD) & is.null(DivD))
     {
       D <- Dis[IdxDES]
-    } else
+    } else # Covariation
     {
-      D <- Dis[1:2]
+      # Covariation with environment
+      if (!is.null(VarD))
+      {
+        CovTmp <- SimDf[SimDf$time == UniqueTime[i], "cov"][1]
+        if (Cor == "linear") # Linear covariation
+        {
+          D <- Dis * exp(VarD * CovTmp)
+        } else # Logistic covariation
+        {
+          D <- Dis / (1 + exp(-VarD[1:2] * (CovTmp - VarD[3:4])))
+        }
+      }
+      # Diversity dependent dispersal
+      # (less likely colonization if there are already many taxa in the sink area)
     }
-    if (is.null(VarE))
+    # No covariation with extinction
+    if (is.null(VarE) & is.null(DivE))
     {
       E <- Ext[IdxDES]
-    } else
+    } else # Covariation
     {
-      E <- Ext[1:2]
+      # Covariation with environment
+      if (!is.null(VarE))
+      {
+        CovTmp <- SimDf[SimDf$time == UniqueTime[i], "cov"][1]
+        if (Cor == "linear") # Linear covariation
+        {
+          E <- Ext * exp(VarE * CovTmp)
+        } else # Logistic covariation
+        {
+          E <- Ext / (1 + exp(-VarE[1:2] * (CovTmp - VarE[3:4])))
+        }
+      }
+      # Diversity dependent extinction
     }
     Q <- make_Q(D, E)
     Index <- SimDf$time %in% TimeCovered & SimDf$subject %in% Species
@@ -47,3 +74,4 @@ sim_core <- function(SimDf,
   }
   return(SimDf)
 }
+

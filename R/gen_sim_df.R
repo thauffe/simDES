@@ -49,11 +49,11 @@ gen_sim_df <- function(TimeSim,
     if (!is.null(Covariate))
     {
       L <- length(TimeSimSpecies)
-      Covariate <- BinnedCov[(LenTimeSim - L):LenTimeSim]
+      CovBinnedSpecies <- BinnedCov[(LenTimeSim - L + 1):LenTimeSim]
     }
 
     SimList[[i]] <- gen_sim_df_cor(TimeSimSpecies, Origin, Species = i,
-                                   Qtimes, CovBinned = Covariate, Ncat)
+                                   Qtimes, CovBinned = CovBinnedSpecies, Ncat)
   }
   SimDf <- do.call("rbind", SimList)
   SimDf <- SimDf[order(SimDf$subject, SimDf$time), ]

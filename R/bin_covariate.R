@@ -5,8 +5,9 @@ bin_covariate <- function(TimeSim,
   # Cov Covariate for dispersal extinction (data.frame with time and covariate)
   # Simulation in msm goes forward in time by increase of time
   # In DES, time is given in units before present
-  Cov <- Cov[nrow(Cov):1, ]
-  Cov[, 1] <- Cov[, 1] - max(Cov[, 1])
+  Cov <- Cov[order(Cov[, 1], decreasing = TRUE), ]
+  Cov[, 1] <- max(Cov[, 1]) - Cov[, 1]
+  Cov[, 2] <- Cov[, 2] - Cov[nrow(Cov), 2]
   MaxTimeSim <- max(TimeSim)
   if (MaxTimeSim > max(Cov[, 1]))
   {

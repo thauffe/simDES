@@ -11,12 +11,14 @@
 #' @param SimQ Sampling rates
 #' @param Qtimes Shift times in dispersal, extinction, and sampling
 #' @param Origin Area of origin \cr Options 'random', '1', or '2'
-#' @param VarD Strength of covariate dependent dispersal
-#' @param VarE Strength of covariate dependent extinction
+#' @param VarD Strengths of covariate dependent dispersal
+#' and in case of logistic correlation the midpoints
+#' @param VarE Strengths of covariate dependent extinction
+#' and in case of logistic correlation the midpoints
 #' @param Covariate data.frame with the covariate for
 #' e.g. environmental dependent dispersal or extinction
-#' @param DivD Strength of diversity dependent dispersal
-#' @param DivE Strength of diversity dependent extinction
+#' @param DivD Strengths of diversity dependent dispersal
+#' @param DivE Strengths of diversity dependent extinction
 #' @param Cor Correlation with environment or diversity \cr Options 'linear' or 'exponential'
 #' @param DataInArea Simulate dynamic in that area
 #' @param Ncat  Number of categories for the discretized Gamma distribution
@@ -99,7 +101,7 @@ sim_DES <- function(Time,
   Decimals <- nchar(gsub("(.*\\.)|([0]*$)", "", as.character(Step)))
   TimeSim <- round(TimeSim, digits = Decimals)
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes, Covariate, DataInArea, Ncat)
-  SimDf <- sim_core(SimDf, SimD, SimE)
+  SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, Cor)
   SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
   DesInput <- get_DES_input(SimDfBinned, Time, BinSize, Nspecies, Distribution = "stateSampling")

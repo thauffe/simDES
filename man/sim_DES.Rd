@@ -28,16 +28,18 @@ sim_DES(Time, Step, BinSize, Nspecies, SimD, SimE, SimQ, Qtimes = NULL,
 
 \item{Origin}{Area of origin \cr Options 'random', '1', or '2'}
 
-\item{VarD}{Strength of covariate dependent dispersal}
+\item{VarD}{Strengths of covariate dependent dispersal
+and in case of logistic correlation the midpoints}
 
-\item{VarE}{Strength of covariate dependent extinction}
+\item{VarE}{Strengths of covariate dependent extinction
+and in case of logistic correlation the midpoints}
 
 \item{Covariate}{data.frame with the covariate for
 e.g. environmental dependent dispersal or extinction}
 
-\item{DivD}{Strength of diversity dependent dispersal}
+\item{DivD}{Strengths of diversity dependent dispersal}
 
-\item{DivE}{Strength of diversity dependent extinction}
+\item{DivE}{Strengths of diversity dependent extinction}
 
 \item{Cor}{Correlation with environment or diversity \cr Options 'linear' or 'exponential'}
 
