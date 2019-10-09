@@ -29,20 +29,17 @@ gen_sim_df <- function(TimeSim,
     BinnedCov <- bin_covariate(TimeSim, Covariate)
   }
   SimList <- vector("list", length = Nspecies)
-  # Decimals <- nchar(gsub("(.*\\.)|([0]*$)", "", as.character(Step)))
   for(i in 1:Nspecies)
   {
     if (is.null(DataInArea))
     {
       AgeSpecies <- runif(1, min = 0, max = Time)
-      # AgeSpecies <- round(AgeSpecies, digits = Decimals)
-      # TimeSimSpecies <- seq(AgeSpecies, Time, by = Step)
       Ts <- findInterval(AgeSpecies, TimeSim)
       TimeSimSpecies <- TimeSim[Ts:LenTimeSim]
 
     } else
     {
-      TimeSimSpecies <- TimeSim #seq(0, Time, by = Step)
+      TimeSimSpecies <- TimeSim
       Origin <- DataInArea + 1
     }
 
@@ -50,6 +47,10 @@ gen_sim_df <- function(TimeSim,
     {
       L <- length(TimeSimSpecies)
       CovBinnedSpecies <- BinnedCov[(LenTimeSim - L + 1):LenTimeSim]
+    }
+    else
+    {
+      CovBinnedSpecies <- NULL
     }
 
     SimList[[i]] <- gen_sim_df_cor(TimeSimSpecies, Origin, Species = i,

@@ -22,7 +22,7 @@ gen_sim_df_cor <- function(TimeSim,
   }
 
   SimDf <- data.frame(subject = Species, time = TimeSim, state = Start, cov = CovBinned,
-                      DivA = NA_integer_, DivB = NA_integer_, Strata = 1,
+                      DivA = 0, DivB = 0, Strata = 1,
                       stateSampling = NA_integer_,
                       GammaCat = ifelse(is.null(Ncat), 1, sample(1:Ncat, 1)))
 

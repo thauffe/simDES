@@ -31,7 +31,7 @@ sim_core <- function(SimDf,
       # Covariation with environment
       if (!is.null(VarD))
       {
-        CovTmp <- SimDf[SimDf$time == UniqueTime[i], "cov"][1]
+        CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], "cov"][1]
         if (Cor == "linear") # Linear covariation
         {
           D <- Dis * exp(VarD * CovTmp)
@@ -39,9 +39,20 @@ sim_core <- function(SimDf,
         {
           D <- Dis / (1 + exp(-VarD[1:2] * (CovTmp - VarD[3:4])))
         }
+      } else
+      {
+        # Diversity dependent dispersal
+        # (less likely colonization if there are already many taxa in the sink area)
+        DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivB","DivA")][1, ]
+        DivTmp <- unlist(DivTmp)
+        if (Cor == "linear") # Linear covariation
+        {
+          D <- Dis * exp(DivD * DivTmp)
+        } else # Logistic covariation
+        {
+          D <- Dis / (1 + exp(-DivD[1:2] * (DivTmp - DivD[3:4])))
+        }
       }
-      # Diversity dependent dispersal
-      # (less likely colonization if there are already many taxa in the sink area)
     }
     # No covariation with extinction
     if (is.null(VarE) & is.null(DivE))
@@ -52,7 +63,7 @@ sim_core <- function(SimDf,
       # Covariation with environment
       if (!is.null(VarE))
       {
-        CovTmp <- SimDf[SimDf$time == UniqueTime[i], "cov"][1]
+        CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], "cov"][1]
         if (Cor == "linear") # Linear covariation
         {
           E <- Ext * exp(VarE * CovTmp)
@@ -60,8 +71,20 @@ sim_core <- function(SimDf,
         {
           E <- Ext / (1 + exp(-VarE[1:2] * (CovTmp - VarE[3:4])))
         }
+      } else
+      {
+        # Diversity dependent extinction
+        # (more likely extinction if there are already many taxa in the focal area)
+        DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
+        DivTmp <- unlist(DivTmp)
+        if (Cor == "linear") # Linear covariation
+        {
+          E <- Ext * exp(DivE * DivTmp)
+        } else # Logistic covariation
+        {
+          E <- Ext / (1 + exp(-DivE[1:2] * (DivTmp - DivE[3:4])))
+        }
       }
-      # Diversity dependent extinction
     }
     Q <- make_Q(D, E)
     Index <- SimDf$time %in% TimeCovered & SimDf$subject %in% Species
