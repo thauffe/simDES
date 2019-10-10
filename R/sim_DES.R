@@ -102,9 +102,10 @@ sim_DES <- function(Time,
   TimeSim <- round(TimeSim, digits = Decimals)
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes, Covariate, DataInArea, Ncat)
   SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, Cor)
-  SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha)
+  SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
-  DesInput <- get_DES_input(SimDfBinned, Time, BinSize, Nspecies, Distribution = "stateSampling")
+  DesInput <- get_DES_input(SimDfBinned, Time, BinSize, Nspecies,
+                            Distribution = "stateSampling", DataInArea)
   Res <- vector("list", length = 2)
   Res[[1]] <- DesInput
   SimDf$time <- Time - SimDf$time

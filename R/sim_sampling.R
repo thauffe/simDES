@@ -1,4 +1,4 @@
-sim_sampling <- function(SimDf, Pres, Step, Ncat, alpha)
+sim_sampling <- function(SimDf, Pres, Step, Ncat, alpha, DataInArea)
 {
   Idx <- ifelse(SimDf$Strata == 1, 2, 2 * SimDf$Strata)
   PresA <- Pres[Idx - 1]
@@ -6,14 +6,27 @@ sim_sampling <- function(SimDf, Pres, Step, Ncat, alpha)
   PresList <- list()
   if(is.null(Ncat))
   {
-    MaxCat <- 1
     PresA <- matrix(PresA, nrow = 1)
     PresB <- matrix(PresB, nrow = 1)
   } else
   {
-    PresA <- sapply(PresA, function(x) x * get_gamma_rates(alpha, Ncat))
-    PresB <- sapply(PresB, function(x) x * get_gamma_rates(alpha, Ncat))
-    MaxCat <- Ncat
+    if (is.null(DataInArea))
+    {
+      PresA <- sapply(PresA, function(x) x * get_gamma_rates(alpha, Ncat))
+      PresB <- sapply(PresB, function(x) x * get_gamma_rates(alpha, Ncat))
+    }
+    else
+    {
+      if (DataInArea == 1)
+      {
+        PresA <- sapply(PresA, function(x) x * get_gamma_rates(alpha, Ncat))
+        PresB <- sapply(PresB, function(x) rep(x, Ncat))
+      } else
+      {
+        PresA <- sapply(PresA, function(x) rep(x, Ncat))
+        PresB <- sapply(PresB, function(x) x * get_gamma_rates(alpha, Ncat))
+      }
+    }
   }
   SA <- exp(-Step * PresA)
   SB <- exp(-Step * PresB)

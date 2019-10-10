@@ -1,4 +1,4 @@
-get_DES_input <- function(SimDfBinned, Time, BinSize, Nspecies, Distribution = "state")
+get_DES_input <- function(SimDfBinned, Time, BinSize, Nspecies, Distribution = "state", DataInArea)
 {
   BinnedTime <- seq(0, Time, by = BinSize)
   DesInput <-  data.frame(scientificName = paste0("SP_", 1:Nspecies),
@@ -11,6 +11,15 @@ get_DES_input <- function(SimDfBinned, Time, BinSize, Nspecies, Distribution = "
     #DesInput[i, 1 + findInterval(Species$BinnedTime, BinnedTime)] <- Species[, Distribution] - 1 # 1:4 -> 0:3
     DesInput[i, 1 + Species$BinnedTimeIndex] <- Species[, Distribution] - 1 # 1:4 -> 0:3
   }
-  DesInput <- DesInput[rowSums(DesInput[, -1], na.rm = TRUE) > 0, ]
+  DesInputTrim <- DesInput[, -c(1, ncol(DesInput))]
+  if (is.null(DataInArea))
+  {
+    Keep <- rowSums(DesInputTrim, na.rm = TRUE) > 0
+  } else
+  {
+    Keep <- apply(DesInputTrim, 1, function(x) any(x == 3))
+
+  }
+  DesInput <- DesInput[Keep, ]
   return(DesInput)
 }
