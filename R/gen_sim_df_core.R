@@ -3,7 +3,8 @@ gen_sim_df_cor <- function(TimeSim,
                            Species = 1,
                            Qtimes = NULL,
                            CovBinned = NULL,
-                           Ncat = NULL)
+                           Ncat = NULL,
+                           Start = NULL)
 {
   # TimeSim Time trajectory (vector)
   # Origin Area of origin (character)
@@ -22,7 +23,7 @@ gen_sim_df_cor <- function(TimeSim,
   }
 
   SimDf <- data.frame(subject = Species, time = TimeSim, state = Start, cov = CovBinned,
-                      DivA = 0, DivB = 0, Strata = 1,
+                      DivA = 0, DivB = 0, DivAB = 0, Strata = 1,
                       stateSampling = NA_integer_,
                       GammaCat = ifelse(is.null(Ncat), 1, sample(1:Ncat, 1)))
 

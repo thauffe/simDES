@@ -15,6 +15,7 @@ sim_core <- function(SimDf,
   IdxDiv <- SimDf$time == min(UniqueTime)
   SimDf[IdxDiv, "DivA"] <- sum(SimDf[IdxDiv, "state"] == 2)
   SimDf[IdxDiv, "DivB"] <- sum(SimDf[IdxDiv, "state"] == 3)
+  SimDf[IdxDiv, "DivAB"] <- sum(SimDf[IdxDiv, "state"] == 4)
   for(i in 2:length(UniqueTime))
   {
     TimeCovered <- UniqueTime[(i - 1):i]
@@ -94,6 +95,7 @@ sim_core <- function(SimDf,
     IdxDiv <- SimDf$time == UniqueTime[i]
     SimDf[IdxDiv, "DivA"] <- sum(SimDf[IdxDiv, "state"] %in% c(2, 4))
     SimDf[IdxDiv, "DivB"] <- sum(SimDf[IdxDiv, "state"] %in% c(3, 4))
+    SimDf[IdxDiv, "DivAB"] <- sum(SimDf[IdxDiv, "state"] %in% 4)
   }
   return(SimDf)
 }

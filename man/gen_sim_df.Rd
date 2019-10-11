@@ -5,7 +5,8 @@
 \title{Template to simulate fossil biogeography}
 \usage{
 gen_sim_df(TimeSim, Nspecies, Origin = "random", Qtimes = NULL,
-  Covariate = NULL, DataInArea = NULL, Ncat = NULL)
+  Covariate = NULL, DataInArea = NULL, Ncat = NULL,
+  Observation = NULL)
 }
 \arguments{
 \item{TimeSim}{Time steps for the simulation}
@@ -14,8 +15,19 @@ gen_sim_df(TimeSim, Nspecies, Origin = "random", Qtimes = NULL,
 
 \item{Origin}{Area of origin \cr Options 'random', '1', or '2'}
 
+\item{Qtimes}{Shift times in dispersal, extinction, and sampling}
+
 \item{Covariate}{data.frame with the covariate for
 e.g. environmental dependent dispersal or extinction}
+
+\item{DataInArea}{Simulate dynamic in that area}
+
+\item{Ncat}{Number of categories for the discretized Gamma distribution
+to simulate heterogeneous sampling}
+
+\item{Observation}{Two column matrix or data.frame of first observation time and area}
+
+\item{alpha}{i.e. the shape and rate of the Gamma distribution}
 }
 \value{
 A data.frame

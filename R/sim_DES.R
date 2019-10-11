@@ -24,8 +24,9 @@
 #' @param Ncat  Number of categories for the discretized Gamma distribution
 #' to simulate heterogeneous sampling
 #' @param alpha i.e. the shape and rate of the Gamma distribution
+#' @param Observation Two column matrix or data.frame of first observation time and area
 #'
-#' @return A data.frame
+#' @return A list with four elements
 #'
 #' @author Torsten Hauffe
 #'
@@ -47,7 +48,8 @@ sim_DES <- function(Time,
                     Cor = "linear",
                     DataInArea = NULL,
                     Ncat = NULL,
-                    alpha = NULL)
+                    alpha = NULL,
+                    Observation = NULL)
 {
   if (Step > Time)
   {
@@ -65,10 +67,10 @@ sim_DES <- function(Time,
   {
     stop("Step size small 1e-10 not possible")
   }
-  if (!Origin %in% c("random", "1", "2"))
-  {
-    stop("Origin should be random, 1, or 2")
-  }
+  # if (!Origin %in% c("random", "1", "2"))
+  # {
+  #   stop("Origin should be random, 1, or 2")
+  # }
   if ( (!is.null(VarD) & length(SimD) > 2) | (!is.null(DivD) & length(SimD) > 2) )
   {
     stop("Covariate/Diversity dependent dispersal and shifts in dispersal rate not compatible")
@@ -100,7 +102,8 @@ sim_DES <- function(Time,
   TimeSim <- seq(0, Time, by = Step)
   Decimals <- nchar(gsub("(.*\\.)|([0]*$)", "", as.character(Step)))
   TimeSim <- round(TimeSim, digits = Decimals)
-  SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes, Covariate, DataInArea, Ncat)
+  SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes,
+                      Covariate, DataInArea, Ncat, Observation)
   SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, Cor)
   SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
@@ -112,8 +115,22 @@ sim_DES <- function(Time,
   SimDf$state <- as.numeric(SimDf$state) - 1
   SimDf$stateSampling <- as.numeric(SimDf$stateSampling) - 1
   colnames(SimDf) <- c("Species", "Time", "RangeSim",
-                       "Covariate", "DiversityA", "DiversityB",
+                       "Covariate", "DiversityA", "DiversityB", "DiversityAB",
                        "Strata", "RangeObs", "GammaCat")
   Res[[2]] <- SimDf
+  Rich <- unique(SimDf[, c("Time", "DiversityA", "DiversityB", "DiversityAB")])
+  Rich <- Rich[order(Rich$Time, decreasing = TRUE), ]
+  RichMat <- data.frame(Time = rev(TimeSim),
+                        SimulatedDivA = 0,
+                        SimulatedDivB = 0,
+                        SimulatedDivAB = 0)
+  RichMat[(nrow(RichMat) - nrow(Rich) + 1):nrow(RichMat), 2:4] <- Rich[, 2:4]
+  Res[[3]] <- RichMat
+  RichDesInput <- data.frame(Time = as.numeric(colnames(DesInput)[-1]),
+                             ObservedDivA = apply(DesInput[,-1], 2, function(x) sum(x %in% c(1, 3))),
+                             ObservedDivB = apply(DesInput[,-1], 2, function(x) sum(x %in% c(2, 3))),
+                             ObservedDivAB = apply(DesInput[,-1], 2, function(x) sum(x %in% 3)),
+                             row.names = NULL)
+  Res[[4]] <- RichDesInput
   return(Res)
 }

@@ -6,8 +6,14 @@
 #' @param TimeSim Time steps for the simulation
 #' @param Nspecies Number of species
 #' @param Origin Area of origin \cr Options 'random', '1', or '2'
+#' @param Qtimes Shift times in dispersal, extinction, and sampling
 #' @param Covariate data.frame with the covariate for
 #' e.g. environmental dependent dispersal or extinction
+#' @param DataInArea Simulate dynamic in that area
+#' @param Ncat  Number of categories for the discretized Gamma distribution
+#' to simulate heterogeneous sampling
+#' @param alpha i.e. the shape and rate of the Gamma distribution
+#' @param Observation Two column matrix or data.frame of first observation time and area
 #'
 #' @return A data.frame
 #'
@@ -20,7 +26,8 @@ gen_sim_df <- function(TimeSim,
                        Qtimes = NULL,
                        Covariate = NULL,
                        DataInArea = NULL,
-                       Ncat = NULL)
+                       Ncat = NULL,
+                       Observation = NULL)
 {
   LenTimeSim <- length(TimeSim)
   Time <- max(TimeSim)
@@ -28,15 +35,27 @@ gen_sim_df <- function(TimeSim,
   {
     BinnedCov <- bin_covariate(TimeSim, Covariate)
   }
+
+  if (!is.null(Observation))
+  {
+    Nspecies <- nrow(Observation)
+  }
   SimList <- vector("list", length = Nspecies)
+
   for(i in 1:Nspecies)
   {
     if (is.null(DataInArea))
     {
-      AgeSpecies <- runif(1, min = 0, max = Time)
-      Ts <- findInterval(AgeSpecies, TimeSim)
+      if (is.null(Observation))
+      {
+        AgeSpecies <- runif(1, min = 0, max = Time)
+        Ts <- findInterval(AgeSpecies, TimeSim)
+      } else
+      {
+        Origin <- Observation[i, 2]
+        Ts <- findInterval(Time - Observation[i, 1] , TimeSim)
+      }
       TimeSimSpecies <- TimeSim[Ts:LenTimeSim]
-
     } else
     {
       TimeSimSpecies <- TimeSim

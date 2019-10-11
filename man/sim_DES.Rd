@@ -7,7 +7,7 @@
 sim_DES(Time, Step, BinSize, Nspecies, SimD, SimE, SimQ, Qtimes = NULL,
   Origin = "random", VarD = NULL, VarE = NULL, Covariate = NULL,
   DivD = NULL, DivE = NULL, Cor = "linear", DataInArea = NULL,
-  Ncat = NULL, alpha = NULL)
+  Ncat = NULL, alpha = NULL, Observation = NULL)
 }
 \arguments{
 \item{Time}{Positive number indicating the time covered by the simulation}
@@ -49,9 +49,11 @@ e.g. environmental dependent dispersal or extinction}
 to simulate heterogeneous sampling}
 
 \item{alpha}{i.e. the shape and rate of the Gamma distribution}
+
+\item{Observation}{Two column matrix or data.frame of first observation time and area}
 }
 \value{
-A data.frame
+A list with four elements
 }
 \description{
 This function simulates dispersal, extinction, and sampling through time
