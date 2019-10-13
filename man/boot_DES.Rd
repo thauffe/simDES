@@ -58,7 +58,7 @@ to simulate heterogeneous sampling}
 \item{ConfInt}{}
 }
 \value{
-A list of two lists
+A list of three elements.
 }
 \description{
 This function simulates several times the biogeographic events

@@ -30,7 +30,7 @@
 #' @param Observation Two column matrix or data.frame of first observation time and area
 #' @param ConfInt
 #'
-#' @return A list of two lists
+#' @return A list of three elements.
 #'
 #' @author Torsten Hauffe
 #'
@@ -62,7 +62,7 @@ boot_DES <- function(Nsim = 10,
                                   nrow = length(TimeSim),
                                   ncol = Nsim)
   rownames(DivA) <- rownames(DivB) <- rownames(DivAB) <- TimeSim
-  Res <- vector("list", length = 2)
+  Res <- vector("list", length = 3)
   for (i in 1: Nsim)
   {
     SimTmp <- sim_DES(Time,
@@ -95,6 +95,12 @@ boot_DES <- function(Nsim = 10,
   names(DivList) <- c("SimulatedDivA", "SimulatedDivB", "SimulatedDivAB")
   Res[[1]] <- DivList
 
+  DivMean <- data.frame(MeanSimDivA = rowMeans(DivA),
+                        MeanSimDivB = rowMeans(DivB),
+                        MeanSimDivAB = rowMeans(DivAB))
+  rownames(DivMean) <- TimeSim
+  Res[[2]] <- DivMean
+
   ConfInt <- sort(ConfInt, decreasing = TRUE)
   Probs1 <- (1 - ConfInt)/2
   Probs2 <- Probs1 + ConfInt
@@ -109,6 +115,6 @@ boot_DES <- function(Nsim = 10,
     names(Ci) <- paste(c("A", "B", "AB"), ConfInt[i], sep = "_")
     CiList[[i]] <- Ci
   }
-  Res[[2]] <- CiList
+  Res[[3]] <- CiList
   return(Res)
 }
