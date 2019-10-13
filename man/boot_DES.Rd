@@ -8,7 +8,7 @@ boot_DES(Nsim = 10, Time, Step, BinSize, Nspecies, SimD, SimE, SimQ,
   Qtimes = NULL, Origin = "random", VarD = NULL, VarE = NULL,
   Covariate = NULL, DivD = NULL, DivE = NULL, Cor = "linear",
   DataInArea = NULL, Ncat = NULL, alpha = NULL, Observation = NULL,
-  ConfInt = 0.95)
+  ConfInt = 0.95, Ncores = 1)
 }
 \arguments{
 \item{Nsim}{Number of bootstrap simulations}
@@ -55,7 +55,10 @@ to simulate heterogeneous sampling}
 
 \item{Observation}{Two column matrix or data.frame of first observation time and area}
 
-\item{ConfInt}{}
+\item{ConfInt}{Confidence interval for simualted diversities
+(e.g. c(0.95, 0.68) for two and one standard deviation)}
+
+\item{Ncores}{Number of CPU cores to use for simulations}
 }
 \value{
 A list of three elements.

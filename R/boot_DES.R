@@ -28,7 +28,9 @@
 #' to simulate heterogeneous sampling
 #' @param alpha i.e. the shape and rate of the Gamma distribution
 #' @param Observation Two column matrix or data.frame of first observation time and area
-#' @param ConfInt
+#' @param ConfInt Confidence interval for simualted diversities
+#' (e.g. c(0.95, 0.68) for two and one standard deviation)
+#' @param Ncores Number of CPU cores to use for simulations
 #'
 #' @return A list of three elements.
 #'
@@ -55,7 +57,8 @@ boot_DES <- function(Nsim = 10,
                      Ncat = NULL,
                      alpha = NULL,
                      Observation = NULL,
-                     ConfInt = 0.95)
+                     ConfInt = 0.95,
+                     Ncores = 1)
 {
   TimeSim <- rev(seq(0, Time, by = Step))
   DivA <- DivB <- DivAB <- matrix(NA_integer_,
@@ -63,30 +66,33 @@ boot_DES <- function(Nsim = 10,
                                   ncol = Nsim)
   rownames(DivA) <- rownames(DivB) <- rownames(DivAB) <- TimeSim
   Res <- vector("list", length = 3)
-  for (i in 1: Nsim)
+  registerDoParallel(Ncores)
+  SimTmp <- foreach(iter = 1:Nsim,
+                    .inorder = FALSE) %dopar% sim_DES(Time,
+                                                      Step,
+                                                      BinSize,
+                                                      Nspecies,
+                                                      SimD,
+                                                      SimE,
+                                                      SimQ,
+                                                      Qtimes,
+                                                      Origin,
+                                                      VarD,
+                                                      VarE,
+                                                      Covariate,
+                                                      DivD,
+                                                      DivE,
+                                                      Cor,
+                                                      DataInArea,
+                                                      Ncat,
+                                                      alpha,
+                                                      Observation)[[3]]
+  stopImplicitCluster()
+  for(i in 1:Nsim)
   {
-    SimTmp <- sim_DES(Time,
-                      Step,
-                      BinSize,
-                      Nspecies,
-                      SimD,
-                      SimE,
-                      SimQ,
-                      Qtimes,
-                      Origin,
-                      VarD,
-                      VarE,
-                      Covariate,
-                      DivD,
-                      DivE,
-                      Cor,
-                      DataInArea,
-                      Ncat,
-                      alpha,
-                      Observation)
-    DivA[, i] <- SimTmp[[3]]$SimulatedDivA
-    DivB[, i] <- SimTmp[[3]]$SimulatedDivB
-    DivAB[, i] <- SimTmp[[3]]$SimulatedDivAB
+      DivA[, i] <- SimTmp[[i]]$SimulatedDivA
+      DivB[, i] <- SimTmp[[i]]$SimulatedDivB
+      DivAB[, i] <- SimTmp[[i]]$SimulatedDivAB
   }
   DivList <- vector("list", length = 3)
   DivList[[1]] <- DivA
