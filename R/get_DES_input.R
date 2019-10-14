@@ -8,8 +8,13 @@ get_DES_input <- function(SimDfBinned, Time, BinSize, Nspecies, Distribution = "
   colnames(DesInput)[-1] <- rev(BinnedTime)
   for(i in 1:Nspecies){
     Species <- SimDfBinned[SimDfBinned$Species == i, ]
-    #DesInput[i, 1 + findInterval(Species$BinnedTime, BinnedTime)] <- Species[, Distribution] - 1 # 1:4 -> 0:3
-    DesInput[i, 1 + Species$BinnedTimeIndex] <- Species[, Distribution] - 1 # 1:4 -> 0:3
+    S <- Species$stateSampling[-length(Species$stateSampling)]
+    if(any(S > 1))
+    {
+      From <- min(which(Species$stateSampling > 1))
+      Species <- Species[From:nrow(Species), ]
+      DesInput[i, 1 + Species$BinnedTimeIndex] <- Species[, Distribution] - 1 # 1:4 -> 0:3
+    }
   }
   DesInputTrim <- DesInput[, -c(1, ncol(DesInput))]
   if (is.null(DataInArea))
