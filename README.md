@@ -9,5 +9,5 @@ The package can be installed directly from this github repository.
 ```{r, warning = F, echo = F}
 library(devtools)
 install_github("thauffe/simDES")
-library(simGDM)
+library(simDES)
 ```
