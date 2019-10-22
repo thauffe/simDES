@@ -116,7 +116,7 @@ sim_DES <- function(Time,
   SimDf$stateSampling <- as.numeric(SimDf$stateSampling) - 1
   colnames(SimDf) <- c("Species", "Time", "RangeSim",
                        "Covariate", "DiversityA", "DiversityB", "DiversityAB",
-                       "Strata", "RangeObs", "GammaCat")
+                       "Strata", "RangeObs", "GammaCat", "d12", "d21", "e1", "e2")
   Res[[2]] <- SimDf
   Rich <- unique(SimDf[, c("Time", "DiversityA", "DiversityB", "DiversityAB")])
   Rich <- Rich[order(Rich$Time, decreasing = TRUE), ]

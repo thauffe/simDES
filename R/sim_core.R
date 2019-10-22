@@ -96,6 +96,8 @@ sim_core <- function(SimDf,
     SimDf[IdxDiv, "DivA"] <- sum(SimDf[IdxDiv, "state"] %in% c(2, 4))
     SimDf[IdxDiv, "DivB"] <- sum(SimDf[IdxDiv, "state"] %in% c(3, 4))
     SimDf[IdxDiv, "DivAB"] <- sum(SimDf[IdxDiv, "state"] %in% 4)
+    SimDf[IdxDiv, c("d12", "d21")] <- D
+    SimDf[IdxDiv, c("e1", "e2")] <- E
   }
   return(SimDf)
 }
