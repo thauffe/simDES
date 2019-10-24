@@ -44,30 +44,30 @@ gen_sim_df <- function(TimeSim,
 
   for(i in 1:Nspecies)
   {
-    if (is.null(DataInArea))
+    if (!is.null(Observation))
     {
-      if (is.null(Observation))
-      {
-        AgeSpecies <- runif(1, min = 0, max = Time)
-        Ts <- findInterval(AgeSpecies, TimeSim)
-      } else
-      {
-        Origin <- Observation[i, 2]
-        Ts <- findInterval(Time - Observation[i, 1] , TimeSim)
-      }
+      Origin <- Observation[i, 2]
+      Ts <- findInterval(Time - Observation[i, 1], TimeSim)
       TimeSimSpecies <- TimeSim[Ts:LenTimeSim]
     } else
     {
-      TimeSimSpecies <- TimeSim
-      Origin <- DataInArea + 1
+      if (is.null(DataInArea))
+      {
+        AgeSpecies <- runif(1, min = 0, max = Time)
+        Ts <- findInterval(AgeSpecies, TimeSim)
+        TimeSimSpecies <- TimeSim[Ts:LenTimeSim]
+      } else
+      {
+        TimeSimSpecies <- TimeSim
+        Origin <- DataInArea + 1
+      }
     }
 
     if (!is.null(Covariate))
     {
       L <- length(TimeSimSpecies)
       CovBinnedSpecies <- BinnedCov[(LenTimeSim - L + 1):LenTimeSim]
-    }
-    else
+    } else
     {
       CovBinnedSpecies <- NULL
     }
