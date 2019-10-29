@@ -45,7 +45,7 @@ sim_core <- function(SimDf,
         # Diversity dependent dispersal
         # (less likely colonization if there are already many taxa in the sink area)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivB","DivA")][1, ]
-        DivTmp <- unlist(DivTmp)
+        DivTmp <- log1p(unlist(DivTmp))
         if (Cor == "linear") # Linear covariation
         {
           D <- Dis * exp(DivD * DivTmp)
@@ -77,7 +77,7 @@ sim_core <- function(SimDf,
         # Diversity dependent extinction
         # (more likely extinction if there are already many taxa in the focal area)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
-        DivTmp <- unlist(DivTmp)
+        DivTmp <- log1p(unlist(DivTmp))
         if (Cor == "linear") # Linear covariation
         {
           E <- Ext * exp(DivE * DivTmp)

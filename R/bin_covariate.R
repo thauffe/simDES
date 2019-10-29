@@ -17,6 +17,7 @@ bin_covariate <- function(TimeSim,
   Cov <- data.frame(Age = CovApp$x, Cov = CovApp$y)
   ToBin <- data.frame(Cov, Bin = findInterval(Cov[,1], TimeSim))
   BinnedCov <- aggregate(ToBin[, 2], by = list(ToBin$Bin), FUN = mean)$x
-  BinnedCov <- BinnedCov - BinnedCov[length(BinnedCov)]
+  # BinnedCov <- BinnedCov - BinnedCov[length(BinnedCov)]
+  BinnedCov <- BinnedCov - mean(BinnedCov)
   return(BinnedCov)
 }
