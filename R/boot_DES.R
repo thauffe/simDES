@@ -22,7 +22,7 @@
 #' e.g. environmental dependent dispersal or extinction
 #' @param DivD Strengths of diversity dependent dispersal
 #' @param DivE Strengths of diversity dependent extinction
-#' @param Cor Correlation with environment or diversity \cr Options 'linear' or 'exponential'
+#' @param Cor Correlation with environment or diversity \cr Options 'exponential' or 'logistic'
 #' @param DataInArea Simulate dynamic in that area
 #' @param Ncat  Number of categories for the discretized Gamma distribution
 #' to simulate heterogeneous sampling
@@ -52,7 +52,7 @@ boot_DES <- function(Nsim = 10,
                      Covariate = NULL,
                      DivD = NULL,
                      DivE = NULL,
-                     Cor = "linear",
+                     Cor = "exponential",
                      DataInArea = NULL,
                      Ncat = NULL,
                      alpha = NULL,

@@ -6,7 +6,7 @@
 \usage{
 boot_DES(Nsim = 10, Time, Step, BinSize, Nspecies, SimD, SimE, SimQ,
   Qtimes = NULL, Origin = "random", VarD = NULL, VarE = NULL,
-  Covariate = NULL, DivD = NULL, DivE = NULL, Cor = "linear",
+  Covariate = NULL, DivD = NULL, DivE = NULL, Cor = "exponential",
   DataInArea = NULL, Ncat = NULL, alpha = NULL, Observation = NULL,
   ConfInt = 0.95, Ncores = 1)
 }
@@ -44,7 +44,7 @@ e.g. environmental dependent dispersal or extinction}
 
 \item{DivE}{Strengths of diversity dependent extinction}
 
-\item{Cor}{Correlation with environment or diversity \cr Options 'linear' or 'exponential'}
+\item{Cor}{Correlation with environment or diversity \cr Options 'exponential' or 'logistic'}
 
 \item{DataInArea}{Simulate dynamic in that area}
 

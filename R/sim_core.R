@@ -5,7 +5,7 @@ sim_core <- function(SimDf,
                      VarE = NULL,
                      DivD = NULL,
                      DivE = NULL,
-                     Cor = "linear")
+                     Cor = "exponential")
 {
   # Loop is not very efficient but the only way to
   # trace richnesses for diversity-dependence
@@ -33,7 +33,7 @@ sim_core <- function(SimDf,
       if (!is.null(VarD))
       {
         CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], "cov"][1]
-        if (Cor == "linear") # Linear covariation
+        if (Cor == "exponential") # Exponential covariation
         {
           D <- Dis * exp(VarD * CovTmp)
         } else # Logistic covariation
@@ -46,7 +46,7 @@ sim_core <- function(SimDf,
         # (less likely colonization if there are already many taxa in the sink area)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivB","DivA")][1, ]
         DivTmp <- log1p(unlist(DivTmp))
-        if (Cor == "linear") # Linear covariation
+        if (Cor == "exponential") # Exponential covariation
         {
           D <- Dis * exp(DivD * DivTmp)
         } else # Logistic covariation
@@ -65,7 +65,7 @@ sim_core <- function(SimDf,
       if (!is.null(VarE))
       {
         CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], "cov"][1]
-        if (Cor == "linear") # Linear covariation
+        if (Cor == "exponential") # Exponential covariation
         {
           E <- Ext * exp(VarE * CovTmp)
         } else # Logistic covariation
@@ -78,7 +78,7 @@ sim_core <- function(SimDf,
         # (more likely extinction if there are already many taxa in the focal area)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
         DivTmp <- log1p(unlist(DivTmp))
-        if (Cor == "linear") # Linear covariation
+        if (Cor == "exponential") # Exponential covariation
         {
           E <- Ext * exp(DivE * DivTmp)
         } else # Logistic covariation

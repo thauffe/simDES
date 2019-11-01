@@ -6,7 +6,7 @@
 \usage{
 sim_DES(Time, Step, BinSize, Nspecies, SimD, SimE, SimQ, Qtimes = NULL,
   Origin = "random", VarD = NULL, VarE = NULL, Covariate = NULL,
-  DivD = NULL, DivE = NULL, Cor = "linear", DataInArea = NULL,
+  DivD = NULL, DivE = NULL, Cor = "exponential", DataInArea = NULL,
   Ncat = NULL, alpha = NULL, Observation = NULL)
 }
 \arguments{
@@ -41,7 +41,7 @@ e.g. environmental dependent dispersal or extinction}
 
 \item{DivE}{Strengths of diversity dependent extinction}
 
-\item{Cor}{Correlation with environment or diversity \cr Options 'linear' or 'exponential'}
+\item{Cor}{Correlation with environment or diversity \cr Options 'exponential' or 'logistic'}
 
 \item{DataInArea}{Simulate dynamic in that area}
 
