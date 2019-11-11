@@ -46,6 +46,7 @@ sim_core <- function(SimDf,
         # (less likely colonization if there are already many taxa in the sink area)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivB","DivA")][1, ]
         # DivTmp <- log1p(unlist(DivTmp))
+        DivTmp <- unlist(DivTmp)
         if (Cor == "exponential") # Exponential covariation
         {
           # D <- Dis * exp(DivD * DivTmp)
@@ -80,6 +81,7 @@ sim_core <- function(SimDf,
         # (more likely extinction if there are already many taxa in the focal area)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
         # DivTmp <- log1p(unlist(DivTmp))
+        DivTmp <- unlist(DivTmp)
         if (Cor == "exponential") # Exponential covariation
         {
           # E <- Ext * exp(DivE * DivTmp)
