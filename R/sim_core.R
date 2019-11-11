@@ -45,10 +45,12 @@ sim_core <- function(SimDf,
         # Diversity dependent dispersal
         # (less likely colonization if there are already many taxa in the sink area)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivB","DivA")][1, ]
-        DivTmp <- log1p(unlist(DivTmp))
+        # DivTmp <- log1p(unlist(DivTmp))
         if (Cor == "exponential") # Exponential covariation
         {
-          D <- Dis * exp(DivD * DivTmp)
+          # D <- Dis * exp(DivD * DivTmp)
+          D <- Dis + DivD * DivTmp
+          D[D < 0] <- 0
         } else # Logistic covariation
         {
           D <- Dis / (1 + exp(-DivD[1:2] * (DivTmp - DivD[3:4])))
@@ -77,10 +79,12 @@ sim_core <- function(SimDf,
         # Diversity dependent extinction
         # (more likely extinction if there are already many taxa in the focal area)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
-        DivTmp <- log1p(unlist(DivTmp))
+        # DivTmp <- log1p(unlist(DivTmp))
         if (Cor == "exponential") # Exponential covariation
         {
-          E <- Ext * exp(DivE * DivTmp)
+          # E <- Ext * exp(DivE * DivTmp)
+          E <- Ext + DivE * DivTmp
+          E[E < 0] <- 0
         } else # Logistic covariation
         {
           E <- Ext / (1 + exp(-DivE[1:2] * (DivTmp - DivE[3:4])))
