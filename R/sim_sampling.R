@@ -36,5 +36,6 @@ sim_sampling <- function(SimDf, Pres, Step, Ncat, alpha, DataInArea)
   SimDf$stateSampling <- lapply(PresProb, function(x) sample(1:4, 1, prob = x))
   IdxPresent <- which(SimDf$time == max(SimDf$time))
   SimDf[IdxPresent, "stateSampling"] <- SimDf[IdxPresent, "state"]
+  SimDf$stateSampling[SimDf$StateObserved] <- SimDf$state[SimDf$StateObserved]
   return(SimDf)
 }

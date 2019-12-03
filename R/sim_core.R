@@ -50,8 +50,10 @@ sim_core <- function(SimDf,
         if (Cor == "exponential") # Exponential covariation
         {
           # D <- Dis * exp(DivD * DivTmp)
-          D <- Dis + DivD * DivTmp
+          # D <- Dis + DivD * DivTmp
+          D <- Dis * (1 - (DivTmp/DivD))
           D[D < 0] <- 0
+
         } else # Logistic covariation
         {
           D <- Dis / (1 + exp(-DivD[1:2] * (DivTmp - DivD[3:4])))
@@ -85,7 +87,8 @@ sim_core <- function(SimDf,
         if (Cor == "exponential") # Exponential covariation
         {
           # E <- Ext * exp(DivE * DivTmp)
-          E <- Ext + DivE * DivTmp
+          # E <- Ext + DivE * DivTmp
+          E <- Ext/(1 - (DivTmp/DivE))
           E[E < 0] <- 0
         } else # Logistic covariation
         {

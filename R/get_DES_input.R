@@ -1,6 +1,7 @@
-get_DES_input <- function(SimDfBinned, Time, BinSize, Nspecies, Distribution = "state", DataInArea)
+get_DES_input <- function(SimDfBinned, Time, BinSize, Distribution = "state", DataInArea)
 {
   BinnedTime <- seq(0, Time, by = BinSize)
+  Nspecies <- max(SimDfBinned$Species)
   DesInput <-  data.frame(scientificName = paste0("SP_", 1:Nspecies),
                           as.data.frame(matrix(NA_integer_,
                                                nrow = Nspecies,

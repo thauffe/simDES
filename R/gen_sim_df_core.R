@@ -4,7 +4,7 @@ gen_sim_df_cor <- function(TimeSim,
                            Qtimes = NULL,
                            CovBinned = NULL,
                            Ncat = NULL,
-                           Start = NULL)
+                           StateObserved = FALSE)
 {
   # TimeSim Time trajectory (vector)
   # Origin Area of origin (character)
@@ -27,7 +27,7 @@ gen_sim_df_cor <- function(TimeSim,
                       stateSampling = NA_integer_,
                       GammaCat = ifelse(is.null(Ncat), 1, sample(1:Ncat, 1)),
                       d12 = NA_real_, d21 = NA_real_,
-                      e1 = NA_real_, e2 = NA_real_)
+                      e1 = NA_real_, e2 = NA_real_, StateObserved = StateObserved)
 
   if (!is.null(Qtimes))
   {

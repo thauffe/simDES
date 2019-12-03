@@ -49,6 +49,7 @@ gen_sim_df <- function(TimeSim,
       Origin <- Observation[i, 2]
       Ts <- findInterval(Time - Observation[i, 1], TimeSim)
       TimeSimSpecies <- TimeSim[Ts:LenTimeSim]
+      StateObserved <- c(TRUE, rep(FALSE, length(TimeSimSpecies) - 1))
     } else
     {
       if (is.null(DataInArea))
@@ -61,6 +62,7 @@ gen_sim_df <- function(TimeSim,
         TimeSimSpecies <- TimeSim
         Origin <- DataInArea + 1
       }
+      StateObserved <- rep(FALSE, length(TimeSimSpecies))
     }
 
     if (!is.null(Covariate))
@@ -73,7 +75,8 @@ gen_sim_df <- function(TimeSim,
     }
 
     SimList[[i]] <- gen_sim_df_cor(TimeSimSpecies, Origin, Species = i,
-                                   Qtimes, CovBinned = CovBinnedSpecies, Ncat)
+                                   Qtimes, CovBinned = CovBinnedSpecies, Ncat,
+                                   StateObserved)
   }
   SimDf <- do.call("rbind", SimList)
   SimDf <- SimDf[order(SimDf$subject, SimDf$time), ]

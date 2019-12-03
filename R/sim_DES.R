@@ -63,6 +63,12 @@ sim_DES <- function(Time,
   {
     stop("BinSize larger than time")
   }
+  TimeTmp <- seq(0, Time, by = BinSize)
+  if (max(TimeTmp) != Time)
+  {
+    BinSize = Time/length(TimeTmp)
+    cat(paste("Time not the product of time bin size.\nReset to", BinSize))
+  }
   if (Step < 1e-10)
   {
     stop("Step size small 1e-10 not possible")
@@ -83,7 +89,7 @@ sim_DES <- function(Time,
   {
     stop("Ncat and alpha need to be provided for sampling heterogeneity")
   }
-  if (!is.null(DataInArea))
+  if (!is.null(DataInArea) & is.null(Observation))
   {
     if (DataInArea == 1)
     {
@@ -107,7 +113,7 @@ sim_DES <- function(Time,
   SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, Cor)
   SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
-  DesInput <- get_DES_input(SimDfBinned, Time, BinSize, Nspecies,
+  DesInput <- get_DES_input(SimDfBinned, Time, BinSize,
                             Distribution = "stateSampling", DataInArea)
   Res <- vector("list", length = 2)
   Res[[1]] <- DesInput
