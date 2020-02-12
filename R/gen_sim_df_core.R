@@ -26,8 +26,10 @@ gen_sim_df_cor <- function(TimeSim,
                       DivA = 0, DivB = 0, DivAB = 0, Strata = 1,
                       stateSampling = NA_integer_,
                       GammaCat = ifelse(is.null(Ncat), 1, sample(1:Ncat, 1)),
-                      d12 = NA_real_, d21 = NA_real_,
-                      e1 = NA_real_, e2 = NA_real_, StateObserved = StateObserved)
+                      rate_d12 = NA_real_, rate_d21 = NA_real_,
+                      rate_e1 = NA_real_, rate_e2 = NA_real_,
+                      num_d12 = 0, num_d21 = 0,
+                      StateObserved = StateObserved)
 
   if (!is.null(Qtimes))
   {

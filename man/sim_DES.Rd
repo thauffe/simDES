@@ -6,8 +6,8 @@
 \usage{
 sim_DES(Time, Step, BinSize, Nspecies, SimD, SimE, SimQ, Qtimes = NULL,
   Origin = "random", VarD = NULL, VarE = NULL, Covariate = NULL,
-  DivD = NULL, DivE = NULL, Cor = "exponential", DataInArea = NULL,
-  Ncat = NULL, alpha = NULL, Observation = NULL)
+  DivD = NULL, DivE = NULL, DdE = NULL, Cor = "exponential",
+  DataInArea = NULL, Ncat = NULL, alpha = NULL, Observation = NULL)
 }
 \arguments{
 \item{Time}{Positive number indicating the time covered by the simulation}
@@ -40,6 +40,8 @@ e.g. environmental dependent dispersal or extinction}
 \item{DivD}{Strengths of diversity dependent dispersal}
 
 \item{DivE}{Strengths of diversity dependent extinction}
+
+\item{DdE}{Strengths of dispersal dependent extinction}
 
 \item{Cor}{Correlation with environment or diversity \cr Options 'exponential' or 'logistic'}
 

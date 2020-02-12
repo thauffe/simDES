@@ -19,6 +19,7 @@
 #' e.g. environmental dependent dispersal or extinction
 #' @param DivD Strengths of diversity dependent dispersal
 #' @param DivE Strengths of diversity dependent extinction
+#' @param DdE Strengths of dispersal dependent extinction
 #' @param Cor Correlation with environment or diversity \cr Options 'exponential' or 'logistic'
 #' @param DataInArea Simulate dynamic in that area
 #' @param Ncat  Number of categories for the discretized Gamma distribution
@@ -45,6 +46,7 @@ sim_DES <- function(Time,
                     Covariate = NULL,
                     DivD = NULL,
                     DivE = NULL,
+                    DdE = NULL,
                     Cor = "exponential",
                     DataInArea = NULL,
                     Ncat = NULL,
@@ -81,9 +83,9 @@ sim_DES <- function(Time,
   {
     stop("Covariate/Diversity dependent dispersal and shifts in dispersal rate not compatible")
   }
-  if ( (!is.null(VarE) & length(SimE) > 2) | (!is.null(DivE) & length(SimE) > 2) )
+  if ( (!is.null(VarE) & length(SimE) > 2) | (!is.null(DivE) & length(SimE) > 2) | (!is.null(DdE) & length(SimE) > 2) )
   {
-    stop("Covariate/Diversity dependent extinction and shifts in extinction rate not compatible")
+    stop("Covariate/Diversity/Dispersal dependent extinction and shifts in extinction rate not compatible")
   }
   if ( sum(is.null(Ncat), is.null(alpha)) == 1 )
   {
@@ -110,7 +112,7 @@ sim_DES <- function(Time,
   TimeSim <- round(TimeSim, digits = Decimals)
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes,
                       Covariate, DataInArea, Ncat, Observation)
-  SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, Cor)
+  SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, DdE, Cor)
   SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
   DesInput <- get_DES_input(SimDfBinned, Time, BinSize,
@@ -122,7 +124,9 @@ sim_DES <- function(Time,
   SimDf$stateSampling <- as.numeric(SimDf$stateSampling) - 1
   colnames(SimDf) <- c("Species", "Time", "RangeSim",
                        "Covariate", "DiversityA", "DiversityB", "DiversityAB",
-                       "Strata", "RangeObs", "GammaCat", "d12", "d21", "e1", "e2")
+                       "Strata", "RangeObs", "GammaCat",
+                       "rate_d12", "rate_d21", "rate_e1", "rate_e2",
+                       "num_d12", "num_d21", "StateObserved")
   Res[[2]] <- SimDf
   Rich <- unique(SimDf[, c("Time", "DiversityA", "DiversityB", "DiversityAB")])
   Rich <- Rich[order(Rich$Time, decreasing = TRUE), ]

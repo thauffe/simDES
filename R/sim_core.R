@@ -5,6 +5,7 @@ sim_core <- function(SimDf,
                      VarE = NULL,
                      DivD = NULL,
                      DivE = NULL,
+                     DdE = NULL,
                      Cor = "exponential")
 {
   # Loop is not very efficient but the only way to
@@ -61,7 +62,7 @@ sim_core <- function(SimDf,
       }
     }
     # No covariation with extinction
-    if (is.null(VarE) & is.null(DivE))
+    if (is.null(VarE) & is.null(DivE) & is.null(DdE))
     {
       E <- Ext[IdxDES]
     } else # Covariation
@@ -77,7 +78,9 @@ sim_core <- function(SimDf,
         {
           E <- Ext / (1 + exp(-VarE[1:2] * (CovTmp - VarE[3:4])))
         }
-      } else
+      }
+      # Diversity dependent extinction
+      if (!is.null(DivE))
       {
         # Diversity dependent extinction
         # (more likely extinction if there are already many taxa in the focal area)
@@ -95,9 +98,20 @@ sim_core <- function(SimDf,
           E <- Ext / (1 + exp(-DivE[1:2] * (DivTmp - DivE[3:4])))
         }
       }
+      # Dispersal dependent extinction
+      else
+      {
+        DisTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("num_d12", "num_d21")][1, ]
+        DisTmp <- unlist(DisTmp)
+        DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
+        DivTmp <- unlist(DivTmp)
+        E <- Ext * exp(DdE * DisTmp/(DivTmp + 0.00001))
+      }
+
     }
     Q <- make_Q(D, E)
     Index <- SimDf$time %in% TimeCovered & SimDf$subject %in% Species
+    StatesBeforeTransition <- SimDf[Index, "state"]
     SimDf[Index, "state"] <- simmulti.msm(SimDf[Index, ],
                                           qmatrix = Q,
                                           start = Start)$state
@@ -107,8 +121,11 @@ sim_core <- function(SimDf,
     SimDf[IdxDiv, "DivAB"] <- sum(SimDf[IdxDiv, "state"] %in% 4)
     IdxRate <- SimDf$time == UniqueTime[i - 1]
     RepIdxRate <- sum(IdxRate)
-    SimDf[IdxRate, c("d12", "d21")] <- rep(D, each = RepIdxRate)
-    SimDf[IdxRate, c("e1", "e2")] <- rep(E, each = RepIdxRate)
+    SimDf[IdxRate, c("rate_d12", "rate_d21")] <- rep(D, each = RepIdxRate)
+    SimDf[IdxRate, c("rate_e1", "rate_e2")] <- rep(E, each = RepIdxRate)
+    IdxDis <- SimDf$time == UniqueTime[i]
+    SimDf[IdxDis, "num_d12"] <- sum(SimDf[Index, "state"] - StatesBeforeTransition == 2)
+    SimDf[IdxDis, "num_d21"] <- sum(SimDf[Index, "state"] - StatesBeforeTransition == 1)
   }
   return(SimDf)
 }
