@@ -6,9 +6,9 @@
 \usage{
 boot_DES(Nsim = 10, Time, Step, BinSize, Nspecies, SimD, SimE, SimQ,
   Qtimes = NULL, Origin = "random", VarD = NULL, VarE = NULL,
-  Covariate = NULL, DivD = NULL, DivE = NULL, Cor = "exponential",
-  DataInArea = NULL, Ncat = NULL, alpha = NULL, Observation = NULL,
-  ConfInt = 0.95, Ncores = 1)
+  Covariate = NULL, DivD = NULL, DivE = NULL, DdE = NULL,
+  Cor = "exponential", DataInArea = NULL, Ncat = NULL,
+  alpha = NULL, Observation = NULL, ConfInt = 0.95, Ncores = 1)
 }
 \arguments{
 \item{Nsim}{Number of bootstrap simulations}
@@ -43,6 +43,8 @@ e.g. environmental dependent dispersal or extinction}
 \item{DivD}{Strengths of diversity dependent dispersal}
 
 \item{DivE}{Strengths of diversity dependent extinction}
+
+\item{DdE}{Strengths of dispersal dependent extinction}
 
 \item{Cor}{Correlation with environment or diversity \cr Options 'exponential' or 'logistic'}
 

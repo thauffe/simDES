@@ -22,6 +22,7 @@
 #' e.g. environmental dependent dispersal or extinction
 #' @param DivD Strengths of diversity dependent dispersal
 #' @param DivE Strengths of diversity dependent extinction
+#' @param DdE Strengths of dispersal dependent extinction
 #' @param Cor Correlation with environment or diversity \cr Options 'exponential' or 'logistic'
 #' @param DataInArea Simulate dynamic in that area
 #' @param Ncat  Number of categories for the discretized Gamma distribution
@@ -52,6 +53,7 @@ boot_DES <- function(Nsim = 10,
                      Covariate = NULL,
                      DivD = NULL,
                      DivE = NULL,
+                     DdE = NULL,
                      Cor = "exponential",
                      DataInArea = NULL,
                      Ncat = NULL,
@@ -82,6 +84,7 @@ boot_DES <- function(Nsim = 10,
                                                       Covariate,
                                                       DivD,
                                                       DivE,
+                                                      DdE,
                                                       Cor,
                                                       DataInArea,
                                                       Ncat,
