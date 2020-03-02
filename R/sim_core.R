@@ -101,7 +101,7 @@ sim_core <- function(SimDf,
       # Dispersal dependent extinction
       else
       {
-        DisTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("num_d12", "num_d21")][1, ]
+        DisTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("num_d21", "num_d12")][1, ]
         DisTmp <- unlist(DisTmp)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
         DivTmp <- unlist(DivTmp)
