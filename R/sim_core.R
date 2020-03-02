@@ -105,7 +105,7 @@ sim_core <- function(SimDf,
         DisTmp <- unlist(DisTmp)
         DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
         DivTmp <- unlist(DivTmp)
-        E <- Ext * exp(DdE * DisTmp/(DivTmp + 0.00001))
+        E <- Ext * exp(DdE * DisTmp/(DivTmp + 1))
       }
 
     }
