@@ -3,39 +3,32 @@ sim_sampling <- function(SimDf, Pres, Step, Ncat, alpha, DataInArea)
   Idx <- ifelse(SimDf$Strata == 1, 2, 2 * SimDf$Strata)
   PresA <- Pres[Idx - 1]
   PresB <- Pres[Idx]
-  PresList <- list()
-  if(is.null(Ncat))
+  if(!is.null(Ncat))
   {
-    PresA <- matrix(PresA, nrow = 1)
-    PresB <- matrix(PresB, nrow = 1)
-  } else
-  {
-    if (is.null(DataInArea))
-    {
-      PresA <- sapply(PresA, function(x) x * get_gamma_rates(alpha, Ncat))
-      PresB <- sapply(PresB, function(x) x * get_gamma_rates(alpha, Ncat))
-    }
-    else
-    {
-      if (DataInArea == 1)
-      {
-        PresA <- sapply(PresA, function(x) x * get_gamma_rates(alpha, Ncat))
-        PresB <- sapply(PresB, function(x) rep(x, Ncat))
-      } else
-      {
-        PresA <- sapply(PresA, function(x) rep(x, Ncat))
-        PresB <- sapply(PresB, function(x) x * get_gamma_rates(alpha, Ncat))
-      }
-    }
+    GammaRate <- get_gamma_rates(alpha, Ncat)
+    GammaRate <- GammaRate[SimDf$GammaCat]
+    PresA <- PresA * GammaRate
+    PresB <- PresB * GammaRate
   }
   SA <- exp(-Step * PresA)
   SB <- exp(-Step * PresB)
-  PresProb <- sapply(1:ncol(SA), function(x)
-    get_pres_prob(SA[SimDf$GammaCat[x], x], SB[SimDf$GammaCat[x], x])[SimDf$state[x], ],
-    simplify = FALSE)
-  SimDf$stateSampling <- lapply(PresProb, function(x) sample(1:4, 1, prob = x))
+  SimDf$stateSampling <- 0
+  # Area A
+  W1 <- which(SimDf$state == 2)
+  R1 <- runif(length(W1), 0, 1)
+  SimDf$stateSampling[W1] <- ifelse(R1 < SA[W1], 0, 1)
+  # Area B
+  W2 <- which(SimDf$state == 3)
+  R2 <- runif(length(W2), 0, 1)
+  SimDf$stateSampling[W2] <- ifelse(R2 < SB[W2], 0, 2)
+  # Area AB
+  W3 <- which(SimDf$state == 4)
+  LenW3 <- length(W3)
+  A <- ifelse(runif(LenW3, 0, 1) < SA[W3], 0, 1)
+  B <- ifelse(runif(LenW3, 0, 1) < SB[W3], 0, 2)
+  SimDf$stateSampling[W3] <- A + B
+  SimDf$stateSampling <- SimDf$stateSampling + 1
   IdxPresent <- which(SimDf$time == max(SimDf$time))
   SimDf[IdxPresent, "stateSampling"] <- SimDf[IdxPresent, "state"]
-  SimDf$stateSampling[SimDf$StateObserved] <- SimDf$state[SimDf$StateObserved]
   return(SimDf)
 }

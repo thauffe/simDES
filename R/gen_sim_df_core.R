@@ -11,7 +11,7 @@ gen_sim_df_cor <- function(TimeSim,
   # CovBinned Binned covariate (vector)
   if (Origin == "random")
   {
-    Start <- sample(2:3, 1)
+    Start <- sample(2:4, 1)
   } else
   {
     Start <- as.numeric(Origin) + 1
