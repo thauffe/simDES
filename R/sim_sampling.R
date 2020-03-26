@@ -17,15 +17,31 @@ sim_sampling <- function(SimDf, Pres, Step, Ncat, alpha, DataInArea)
   W1 <- which(SimDf$state == 2)
   R1 <- runif(length(W1), 0, 1)
   SimDf$stateSampling[W1] <- ifelse(R1 < SA[W1], 0, 1)
+  if(DataInArea == 2)
+  {
+    SimDf$stateSampling[W1] <- 1
+  }
   # Area B
   W2 <- which(SimDf$state == 3)
   R2 <- runif(length(W2), 0, 1)
   SimDf$stateSampling[W2] <- ifelse(R2 < SB[W2], 0, 2)
+  if(DataInArea == 1)
+  {
+    SimDf$stateSampling[W2] <- 2
+  }
   # Area AB
   W3 <- which(SimDf$state == 4)
   LenW3 <- length(W3)
   A <- ifelse(runif(LenW3, 0, 1) < SA[W3], 0, 1)
   B <- ifelse(runif(LenW3, 0, 1) < SB[W3], 0, 2)
+  if(DataInArea == 2)
+  {
+    A <- rep(1, LenW3)
+  }
+  if(DataInArea == 1)
+  {
+    B <- rep(2, LenW3)
+  }
   SimDf$stateSampling[W3] <- A + B
   SimDf$stateSampling <- SimDf$stateSampling + 1
   IdxPresent <- which(SimDf$time == max(SimDf$time))
