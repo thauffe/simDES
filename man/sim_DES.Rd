@@ -26,7 +26,7 @@ sim_DES(Time, Step, BinSize, Nspecies, SimD, SimE, SimQ, Qtimes = NULL,
 
 \item{Qtimes}{Shift times in dispersal, extinction, and sampling}
 
-\item{Origin}{Area of origin \cr Options 'random', '1', or '2'}
+\item{Origin}{Area of origin \cr Options 'random', '1', '2', or '3'}
 
 \item{VarD}{Strengths of covariate dependent dispersal
 and in case of logistic correlation the midpoints}

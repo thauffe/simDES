@@ -10,7 +10,7 @@
 #' @param SimE Extinction rates
 #' @param SimQ Sampling rates
 #' @param Qtimes Shift times in dispersal, extinction, and sampling
-#' @param Origin Area of origin \cr Options 'random', '1', or '2'
+#' @param Origin Area of origin \cr Options 'random', '1', '2', or '3'
 #' @param VarD Strengths of covariate dependent dispersal
 #' and in case of logistic correlation the midpoints
 #' @param VarE Strengths of covariate dependent extinction
@@ -75,10 +75,10 @@ sim_DES <- function(Time,
   {
     stop("Step size small 1e-10 not possible")
   }
-  # if (!Origin %in% c("random", "1", "2"))
-  # {
-  #   stop("Origin should be random, 1, or 2")
-  # }
+  if (!Origin %in% c("random", "1", "2", "3"))
+  {
+    stop("Origin should be random, 1, 2, or 3")
+  }
   if ( (!is.null(VarD) & length(SimD) > 2) | (!is.null(DivD) & length(SimD) > 2) )
   {
     stop("Covariate/Diversity dependent dispersal and shifts in dispersal rate not compatible")
