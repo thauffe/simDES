@@ -6,7 +6,7 @@
 \usage{
 gen_sim_df(TimeSim, Nspecies, Origin = "random", Qtimes = NULL,
   Covariate = NULL, DataInArea = NULL, Ncat = NULL,
-  Observation = NULL)
+  Observation = NULL, GlobExt = NULL)
 }
 \arguments{
 \item{TimeSim}{Time steps for the simulation}
@@ -26,6 +26,8 @@ e.g. environmental dependent dispersal or extinction}
 to simulate heterogeneous sampling}
 
 \item{Observation}{Two column matrix or data.frame of first observation time and area}
+
+\item{GlobExt}{Global extinction rate}
 
 \item{alpha}{i.e. the shape and rate of the Gamma distribution}
 }

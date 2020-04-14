@@ -10,7 +10,7 @@
 #' @param SimE Extinction rates
 #' @param SimQ Sampling rates
 #' @param Qtimes Shift times in dispersal, extinction, and sampling
-#' @param Origin Area of origin \cr Options 'random', '1', '2', or '3'
+#' @param Origin Vector with the possible areas of origin \cr Options: 0 (i.e. random, default) or any combination of 1, 2, and/or 3
 #' @param VarD Strengths of covariate dependent dispersal
 #' and in case of logistic correlation the midpoints
 #' @param VarE Strengths of covariate dependent extinction
@@ -26,6 +26,7 @@
 #' to simulate heterogeneous sampling
 #' @param alpha i.e. the shape and rate of the Gamma distribution
 #' @param Observation Two column matrix or data.frame of first observation time and area
+#' @param GlobExt Global extinction rate
 #'
 #' @return A list with four elements
 #'
@@ -40,7 +41,7 @@ sim_DES <- function(Time,
                     SimE,
                     SimQ,
                     Qtimes = NULL,
-                    Origin = "random",
+                    Origin = 0,
                     VarD = NULL,
                     VarE = NULL,
                     Covariate = NULL,
@@ -51,7 +52,8 @@ sim_DES <- function(Time,
                     DataInArea = NULL,
                     Ncat = NULL,
                     alpha = NULL,
-                    Observation = NULL)
+                    Observation = NULL,
+                    GlobExt = NULL)
 {
   if (Step > Time)
   {
@@ -75,9 +77,13 @@ sim_DES <- function(Time,
   {
     stop("Step size small 1e-10 not possible")
   }
-  if (!Origin %in% c("random", "1", "2", "3"))
+  if ( !all(Origin %in% 0:3) | (any(Origin %in% 0) & any(Origin %in% 1:3)) )
   {
-    stop("Origin should be random, 1, 2, or 3")
+    stop("Origin should be 0 (i.e. random) or any combination of 1, 2, and/or 3")
+  }
+  if (any(Origin == 0))
+  {
+    Origin <- 1:3
   }
   if ( (!is.null(VarD) & length(SimD) > 2) | (!is.null(DivD) & length(SimD) > 2) )
   {
@@ -95,11 +101,11 @@ sim_DES <- function(Time,
   {
     if (DataInArea == 1)
     {
-      Origin <- "2"
+      Origin <- 2
     }
     if (DataInArea == 2)
     {
-      Origin <- "1"
+      Origin <- 1
     }
   }
 
@@ -111,7 +117,7 @@ sim_DES <- function(Time,
   Decimals <- nchar(gsub("(.*\\.)|([0]*$)", "", as.character(Step)))
   TimeSim <- round(TimeSim, digits = Decimals)
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes,
-                      Covariate, DataInArea, Ncat, Observation)
+                      Covariate, DataInArea, Ncat, Observation, GlobExt)
   SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, DdE, Cor)
   SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)

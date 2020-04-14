@@ -14,6 +14,7 @@
 #' to simulate heterogeneous sampling
 #' @param alpha i.e. the shape and rate of the Gamma distribution
 #' @param Observation Two column matrix or data.frame of first observation time and area
+#' @param GlobExt Global extinction rate
 #'
 #' @return A data.frame
 #'
@@ -27,7 +28,8 @@ gen_sim_df <- function(TimeSim,
                        Covariate = NULL,
                        DataInArea = NULL,
                        Ncat = NULL,
-                       Observation = NULL)
+                       Observation = NULL,
+                       GlobExt = NULL)
 {
   LenTimeSim <- length(TimeSim)
   Time <- max(TimeSim)
@@ -56,6 +58,16 @@ gen_sim_df <- function(TimeSim,
       {
         AgeSpecies <- runif(1, min = 0, max = Time)
         Ts <- findInterval(AgeSpecies, TimeSim)
+        if (!is.null(GlobExt))
+        {
+          LenTimeSim <- length(TimeSim)
+          Duration <- rexp(1, GlobExt)
+          TimeGlobExt <- AgeSpecies + Duration
+          if (TimeGlobExt < Time)
+          {
+            LenTimeSim <- findInterval(TimeGlobExt, TimeSim)
+          }
+        }
         TimeSimSpecies <- TimeSim[Ts:LenTimeSim]
       } else
       {

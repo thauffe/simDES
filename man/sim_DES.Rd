@@ -5,9 +5,10 @@
 \title{Simulate fossil biogeography}
 \usage{
 sim_DES(Time, Step, BinSize, Nspecies, SimD, SimE, SimQ, Qtimes = NULL,
-  Origin = "random", VarD = NULL, VarE = NULL, Covariate = NULL,
+  Origin = 0, VarD = NULL, VarE = NULL, Covariate = NULL,
   DivD = NULL, DivE = NULL, DdE = NULL, Cor = "exponential",
-  DataInArea = NULL, Ncat = NULL, alpha = NULL, Observation = NULL)
+  DataInArea = NULL, Ncat = NULL, alpha = NULL, Observation = NULL,
+  GlobExt = NULL)
 }
 \arguments{
 \item{Time}{Positive number indicating the time covered by the simulation}
@@ -26,7 +27,7 @@ sim_DES(Time, Step, BinSize, Nspecies, SimD, SimE, SimQ, Qtimes = NULL,
 
 \item{Qtimes}{Shift times in dispersal, extinction, and sampling}
 
-\item{Origin}{Area of origin \cr Options 'random', '1', '2', or '3'}
+\item{Origin}{Vector with the possible areas of origin \cr Options: 0 (i.e. random, default) or any combination of 1, 2, and/or 3}
 
 \item{VarD}{Strengths of covariate dependent dispersal
 and in case of logistic correlation the midpoints}
@@ -53,6 +54,8 @@ to simulate heterogeneous sampling}
 \item{alpha}{i.e. the shape and rate of the Gamma distribution}
 
 \item{Observation}{Two column matrix or data.frame of first observation time and area}
+
+\item{GlobExt}{Global extinction rate}
 }
 \value{
 A list with four elements
