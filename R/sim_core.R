@@ -94,19 +94,13 @@ sim_core <- function(SimDf,
           DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
           # DivTmp <- log1p(unlist(DivTmp))
           DivTmp <- unlist(DivTmp)
-          if (Cor == "exponential") # Exponential covariation
-          {
-            # E <- Ext * exp(DivE * DivTmp)
-            E <- Ext + DivE * DivTmp
-            # E <- Ext/(1 - (DivTmp/DivE))
-            # E[E < 0] <- 0
-          } else # Logistic covariation
-          {
-            E <- Ext / (1 + exp(-DivE[1:2] * (DivTmp - DivE[3:4])))
-          }
+          E <- Ext/(1 - (DivTmp/DivE))
+          MaxExt <- Ext / (1. - (DivE - 1e-5)/DivE)
+          NegExt <- E < 0 | is.infinite(E)
+          E[NegExt] <- MaxExt[NegExt]
         }
         # Dispersal dependent extinction
-        else
+        if (!is.null(DdE))
         {
           DisTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("num_d21", "num_d12")][1, ]
           DisTmp <- unlist(DisTmp)
