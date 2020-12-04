@@ -4,11 +4,31 @@
 \alias{boot_DES}
 \title{Bootstrap fossil biogeography}
 \usage{
-boot_DES(Nsim = 10, Time, Step, BinSize, Nspecies, SimD, SimE, SimQ,
-  Qtimes = NULL, Origin = "random", VarD = NULL, VarE = NULL,
-  Covariate = NULL, DivD = NULL, DivE = NULL, DdE = NULL,
-  Cor = "exponential", DataInArea = NULL, Ncat = NULL,
-  alpha = NULL, Observation = NULL, ConfInt = 0.95, Ncores = 1)
+boot_DES(
+  Nsim = 10,
+  Time,
+  Step,
+  BinSize,
+  Nspecies,
+  SimD,
+  SimE,
+  SimQ,
+  Qtimes = NULL,
+  Origin = "random",
+  VarD = NULL,
+  VarE = NULL,
+  Covariate = NULL,
+  DivD = NULL,
+  DivE = NULL,
+  DdE = NULL,
+  Cor = "exponential",
+  DataInArea = NULL,
+  Ncat = NULL,
+  alpha = NULL,
+  Observation = NULL,
+  ConfInt = 0.95,
+  Ncores = 1
+)
 }
 \arguments{
 \item{Nsim}{Number of bootstrap simulations}

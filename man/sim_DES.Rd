@@ -4,11 +4,29 @@
 \alias{sim_DES}
 \title{Simulate fossil biogeography}
 \usage{
-sim_DES(Time, Step, BinSize, Nspecies, SimD, SimE, SimQ, Qtimes = NULL,
-  Origin = 0, VarD = NULL, VarE = NULL, Covariate = NULL,
-  DivD = NULL, DivE = NULL, DdE = NULL, Cor = "exponential",
-  DataInArea = NULL, Ncat = NULL, alpha = NULL, Observation = NULL,
-  GlobExt = NULL)
+sim_DES(
+  Time,
+  Step,
+  BinSize,
+  Nspecies,
+  SimD,
+  SimE,
+  SimQ,
+  Qtimes = NULL,
+  Origin = 0,
+  VarD = NULL,
+  VarE = NULL,
+  Covariate = NULL,
+  DivD = NULL,
+  DivE = NULL,
+  DdE = NULL,
+  Cor = "exponential",
+  DataInArea = NULL,
+  Ncat = NULL,
+  alpha = NULL,
+  Observation = NULL,
+  GlobExt = NULL
+)
 }
 \arguments{
 \item{Time}{Positive number indicating the time covered by the simulation}
@@ -49,7 +67,7 @@ e.g. environmental dependent dispersal or extinction}
 \item{DataInArea}{Simulate dynamic in that area}
 
 \item{Ncat}{Number of categories for the discretized Gamma distribution
-to simulate heterogeneous sampling}
+to simulate heterogeneous sampling or Inf for a random draw of the Gamma distribution}
 
 \item{alpha}{i.e. the shape and rate of the Gamma distribution}
 

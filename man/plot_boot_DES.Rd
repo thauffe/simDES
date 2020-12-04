@@ -4,8 +4,12 @@
 \alias{plot_boot_DES}
 \title{Plot bootstrapped fossil biogeography}
 \usage{
-plot_boot_DES(BootDes, DivToPlot = 1:3, Col = c("orange", "dodgerblue",
-  "green"), Transparency = 0.5)
+plot_boot_DES(
+  BootDes,
+  DivToPlot = 1:3,
+  Col = c("orange", "dodgerblue", "green"),
+  Transparency = 0.5
+)
 }
 \arguments{
 \item{BootDes}{Bootstrapped fossil biogeography from boot_DES}

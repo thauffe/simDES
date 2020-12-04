@@ -13,7 +13,7 @@
 #' @param Ncat  Number of categories for the discretized Gamma distribution
 #' to simulate heterogeneous sampling
 #' @param alpha i.e. the shape and rate of the Gamma distribution
-#' @param Observation Two column matrix or data.frame of first observation time and area
+#' @param Observation Two column matrix or data.frame of first observation time and area per species
 #' @param GlobExt Global extinction rate
 #'
 #' @return A data.frame

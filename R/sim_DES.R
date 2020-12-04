@@ -23,7 +23,7 @@
 #' @param Cor Correlation with environment or diversity \cr Options 'exponential' or 'logistic'
 #' @param DataInArea Simulate dynamic in that area
 #' @param Ncat  Number of categories for the discretized Gamma distribution
-#' to simulate heterogeneous sampling
+#' to simulate heterogeneous sampling or Inf for a random draw of the Gamma distribution
 #' @param alpha i.e. the shape and rate of the Gamma distribution
 #' @param Observation Two column matrix or data.frame of first observation time and area
 #' @param GlobExt Global extinction rate
@@ -119,7 +119,7 @@ sim_DES <- function(Time,
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes,
                       Covariate, DataInArea, Ncat, Observation, GlobExt)
   SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, DdE, Cor)
-  SimDf <- sim_sampling(SimDf, SimQ, Step, Ncat, alpha, DataInArea)
+  SimDf <- sim_sampling(SimDf, SimQ, Nspecies, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
   DesInput <- get_DES_input(SimDfBinned, Time, BinSize,
                             Distribution = "stateSampling", DataInArea)

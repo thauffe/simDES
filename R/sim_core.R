@@ -94,10 +94,11 @@ sim_core <- function(SimDf,
           DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
           # DivTmp <- log1p(unlist(DivTmp))
           DivTmp <- unlist(DivTmp)
-          E <- Ext/(1 - (DivTmp/DivE))
-          MaxExt <- Ext / (1. - (DivE - 1e-5)/DivE)
-          NegExt <- E < 0 | is.infinite(E)
-          E[NegExt] <- MaxExt[NegExt]
+          # E <- Ext/(1 - (DivTmp/DivE))
+          # MaxExt <- Ext / (1. - (DivE - 1e-5)/DivE)
+          # NegExt <- E < 0 | is.infinite(E)
+          # E[NegExt] <- MaxExt[NegExt]
+          E <- Ext + (DivE * DivTmp^2)
         }
         # Dispersal dependent extinction
         if (!is.null(DdE))

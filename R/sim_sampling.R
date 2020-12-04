@@ -1,12 +1,20 @@
-sim_sampling <- function(SimDf, Pres, Step, Ncat, alpha, DataInArea)
+sim_sampling <- function(SimDf, Pres, Nspecies, Step, Ncat, alpha, DataInArea)
 {
   Idx <- ifelse(SimDf$Strata == 1, 2, 2 * SimDf$Strata)
   PresA <- Pres[Idx - 1]
   PresB <- Pres[Idx]
   if(!is.null(Ncat))
   {
-    GammaRate <- get_gamma_rates(alpha, Ncat)
-    GammaRate <- GammaRate[SimDf$GammaCat]
+    if(is.infinite(Ncat))
+    {
+      GammaRate <- rgamma(Nspecies, alpha, alpha)
+      GammaRate <- GammaRate[SimDf$subject]
+    }
+    else
+    {
+      GammaRate <- get_gamma_rates(alpha, Ncat)
+      GammaRate <- GammaRate[SimDf$GammaCat]
+    }
     PresA <- PresA * GammaRate
     PresB <- PresB * GammaRate
   }
