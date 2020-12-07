@@ -111,6 +111,7 @@ sim_DES <- function(Time,
 
   if (!is.null(Qtimes))
   {
+    Qtimes <- sort(Qtimes, decreasing = TRUE)
     Qtimes <- Time - Qtimes
   }
   TimeSim <- seq(0, Time, by = Step)
