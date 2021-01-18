@@ -25,7 +25,11 @@ sim_DES(
   Ncat = NULL,
   alpha = NULL,
   Observation = NULL,
-  GlobExt = NULL
+  GlobExt = NULL,
+  TraitD = NULL,
+  VarTraitD = NULL,
+  TraitE = NULL,
+  VarTraitE = NULL
 )
 }
 \arguments{
@@ -74,6 +78,14 @@ to simulate heterogeneous sampling or Inf for a random draw of the Gamma distrib
 \item{Observation}{Two column matrix or data.frame of first observation time and area}
 
 \item{GlobExt}{Global extinction rate}
+
+\item{TraitD}{Data.frame or matrix of a trait influencing dispersal (first column taxon index and second the trait). Either a continuous trait or a binary trait codes as 1 and exp(1) (internal log transformation)}
+
+\item{VarTraitD}{Strengths of trait dependent dispersal}
+
+\item{TraitE}{Continuous influencing extinction (first column taxon index and second the trait). See TraitD for details}
+
+\item{VarTraitE}{Strengths of trait dependent extinction}
 }
 \value{
 A list with four elements

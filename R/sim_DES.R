@@ -27,6 +27,10 @@
 #' @param alpha i.e. the shape and rate of the Gamma distribution
 #' @param Observation Two column matrix or data.frame of first observation time and area
 #' @param GlobExt Global extinction rate
+#' @param TraitD Data.frame or matrix of a trait influencing dispersal (first column taxon index and second the trait). Either a continuous trait or a binary trait codes as 1 and exp(1) (internal log transformation)
+#' @param VarTraitD Strengths of trait dependent dispersal
+#' @param TraitE Continuous influencing extinction (first column taxon index and second the trait). See TraitD for details
+#' @param VarTraitE Strengths of trait dependent extinction
 #'
 #' @return A list with four elements
 #'
@@ -53,7 +57,11 @@ sim_DES <- function(Time,
                     Ncat = NULL,
                     alpha = NULL,
                     Observation = NULL,
-                    GlobExt = NULL)
+                    GlobExt = NULL,
+                    TraitD = NULL,
+                    VarTraitD = NULL,
+                    TraitE = NULL,
+                    VarTraitE = NULL)
 {
   if (Step > Time)
   {
@@ -119,7 +127,9 @@ sim_DES <- function(Time,
   TimeSim <- round(TimeSim, digits = Decimals)
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes,
                       Covariate, DataInArea, Ncat, Observation, GlobExt)
-  SimDf <- sim_core(SimDf, SimD, SimE, VarD, VarE, DivD, DivE, DdE, Cor)
+  SimDf <- sim_core(SimDf, SimD, SimE,
+                    VarD, VarE, DivD, DivE, DdE, Cor,
+                    TraitD, VarTraitD, TraitE, VarTraitE)
   SimDf <- sim_sampling(SimDf, SimQ, Nspecies, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
   DesInput <- get_DES_input(SimDfBinned, Time, BinSize,
@@ -149,5 +159,17 @@ sim_DES <- function(Time,
                              ObservedDivAB = apply(DesInput[,-1], 2, function(x) sum(x %in% 3)),
                              row.names = NULL)
   Res[[4]] <- RichDesInput
+  if ( !is.null(VarTraitD) )
+  {
+    TraitD[, 1] <- paste0("SP_", TraitD[, 1])
+    TraitD <- TraitD[TraitD[, 1] %in% DesInput$scientificName, ]
+    Res[[5]] <- TraitD
+  }
+  if ( !is.null(VarTraitE) )
+  {
+    TraitE[, 1] <- paste0("SP_", TraitE[, 1])
+    TraitE <- TraitE[TraitE[, 1] %in% DesInput$scientificName, ]
+    Res[[6]] <- TraitE
+  }
   return(Res)
 }

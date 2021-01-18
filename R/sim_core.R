@@ -6,7 +6,11 @@ sim_core <- function(SimDf,
                      DivD = NULL,
                      DivE = NULL,
                      DdE = NULL,
-                     Cor = "exponential")
+                     Cor = "exponential",
+                     TraitD = NULL,
+                     VarTraitD = NULL,
+                     TraitE = NULL,
+                     VarTraitE = NULL)
 {
   # Loop is not very efficient but the only way to
   # trace richnesses for diversity-dependence
@@ -17,6 +21,16 @@ sim_core <- function(SimDf,
   SimDf[IdxDiv, "DivA"] <- sum(SimDf[IdxDiv, "state"] == 2)
   SimDf[IdxDiv, "DivB"] <- sum(SimDf[IdxDiv, "state"] == 3)
   SimDf[IdxDiv, "DivAB"] <- sum(SimDf[IdxDiv, "state"] == 4)
+  if ( !is.null(VarTraitD) )
+  {
+    TraitD[, 2] <- log(TraitD[, 2])
+    TraitD[, 2] <- TraitD[, 2] - mean(TraitD[, 2])
+  }
+  if ( !is.null(VarTraitE) )
+  {
+    TraitE[, 2] <- log(TraitE[, 2])
+    TraitE[, 2] <- TraitE[, 2] - mean(TraitE[, 2])
+  }
   for(i in 2:length(UniqueTime))
   {
     TimeCovered <- UniqueTime[(i - 1):i]
@@ -110,14 +124,46 @@ sim_core <- function(SimDf,
           # E <- Ext * exp(DdE * DisTmp/(DivTmp + 1))
           E <- Ext + DdE * DisTmp/(DivTmp + 1)
         }
-
       }
-      Q <- make_Q(D, E)
-      Index <- SimDf$time %in% TimeCovered & SimDf$subject %in% Species
-      StatesBeforeTransition <- SimDf[Index, "state"]
-      SimDf[Index, "state"] <- simmulti.msm(SimDf[Index, ],
-                                            qmatrix = Q,
-                                            start = Start)$state
+      # Trait dependent dispersal and extinction
+      if ( is.null(VarTraitD) & is.null(VarTraitE) )
+      {
+        Q <- make_Q(D, E)
+        Index <- SimDf$time %in% TimeCovered & SimDf$subject %in% Species
+        StatesBeforeTransition <- SimDf[Index, "state"]
+        SimDf[Index, "state"] <- simmulti.msm(SimDf[Index, ],
+                                              qmatrix = Q,
+                                              start = Start)$state
+      } else
+      {
+        for (s in 1:length(Species)) {
+          SpeciesTmp <- Species[s]
+          StartTmp <- Start[s]
+          if ( !is.null(VarTraitD) )
+          {
+            Dtmp <- exp(log(D) + VarTraitD * TraitD[TraitD[, 1] == SpeciesTmp, 2])
+            Dtmp[Dtmp < 0] <- 0
+          } else
+          {
+            Dtmp <- D
+          }
+          if ( !is.null(VarTraitE) )
+          {
+            Etmp <- exp(log(E) + VarTraitE * TraitE[TraitE[, 1] == SpeciesTmp, 2])
+            Etmp[Etmp < 0] <- 0
+          }else
+          {
+            Etmp <- E
+          }
+          Q <- make_Q(Dtmp, Etmp)
+          Index <- SimDf$time %in% TimeCovered & SimDf$subject %in% SpeciesTmp
+          SimDf[Index, "state"] <- simmulti.msm(SimDf[Index, ],
+                                                qmatrix = Q,
+                                                start = StartTmp)$state
+        }
+        Index <- SimDf$time %in% TimeCovered & SimDf$subject %in% Species
+        StatesBeforeTransition <- SimDf[Index, "state"]
+      }
       IdxDiv <- SimDf$time == UniqueTime[i]
       SimDf[IdxDiv, "DivA"] <- sum(SimDf[IdxDiv, "state"] %in% c(2, 4))
       SimDf[IdxDiv, "DivB"] <- sum(SimDf[IdxDiv, "state"] %in% c(3, 4))
