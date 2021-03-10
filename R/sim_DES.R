@@ -31,6 +31,7 @@
 #' @param VarTraitD Strengths of trait dependent dispersal
 #' @param TraitE Continuous influencing extinction (first column taxon index and second the trait). See TraitD for details
 #' @param VarTraitE Strengths of trait dependent extinction
+#' @param Verbose Should messages be printed?
 #'
 #' @return A list with four elements
 #'
@@ -61,7 +62,8 @@ sim_DES <- function(Time,
                     TraitD = NULL,
                     VarTraitD = NULL,
                     TraitE = NULL,
-                    VarTraitE = NULL)
+                    VarTraitE = NULL,
+                    Verbose = FALSE)
 {
   if (Step > Time)
   {
@@ -79,7 +81,11 @@ sim_DES <- function(Time,
   if (max(TimeTmp) != Time)
   {
     BinSize = Time/length(TimeTmp)
-    cat(paste("Time not the product of time bin size.\nReset to", BinSize))
+    if (Verbose)
+    {
+      cat(paste("Time not the product of time bin size.\nReset to", BinSize))
+    }
+
   }
   if (Step < 1e-10)
   {

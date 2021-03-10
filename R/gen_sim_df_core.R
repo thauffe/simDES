@@ -14,7 +14,7 @@ gen_sim_df_cor <- function(TimeSim,
   #   Start <- sample(2:4, 1)
   # } else
   # {
-    Start <- sample(min(Origin):max(Origin), 1) + 1
+    Start <- resample(min(Origin):max(Origin), 1) + 1
   # }
 
   if (is.null(CovBinned))
