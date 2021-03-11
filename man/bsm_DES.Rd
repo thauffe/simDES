@@ -6,6 +6,8 @@
 \usage{
 bsm_DES(
   DesIn,
+  NumBsm = 1,
+  MaxAttempts = 1000,
   Step,
   SimD,
   SimE,
@@ -27,6 +29,10 @@ bsm_DES(
 }
 \arguments{
 \item{DesIn}{Input file as for a PyRateDES2 analysis}
+
+\item{NumBsm}{Number of biogeographic stochastic maps}
+
+\item{MaxAttempts}{Maximum number of attempts to stochastically simulate the biogeographic history of a single taxon}
 
 \item{Step}{Time steps for the simulation}
 
@@ -66,7 +72,7 @@ e.g. environmental dependent dispersal or extinction}
 \item{Verbose}{Should progress be printed?}
 }
 \value{
-A list with four elements
+A list with stochastically mapped biogeographic histories
 }
 \description{
 This function performs a stochastically simulates the biogeographic history of taxa
