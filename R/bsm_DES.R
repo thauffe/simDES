@@ -80,13 +80,13 @@ bsm_DES <- function(DesIn,
         N <- 2
         if (!is.null(VarTraitD))
         {
-          TraitD <- log(TraitD[, 2])
-          TraitD <- TraitD - mean(TraitD)
+          TrD <- log(TraitD[, 2])
+          TrD <- TrD - mean(TrD)
         }
         if (!is.null(VarTraitE))
         {
-          TraitE <- log(TraitE[, 2])
-          TraitE <- TraitE - mean(TraitE)
+          TrE <- log(TraitE[, 2])
+          TrE <- TrE - mean(TrE)
         }
       }
       for (i in 1:Nspecies)
@@ -97,14 +97,14 @@ bsm_DES <- function(DesIn,
         CompatWithObs <- FALSE
         if (!is.null(VarTraitD))
         {
-          TraitDSp <- cbind(1:2, c(exp(2 * TraitD[i]), 1))
+          TraitDSp <- cbind(1:2, c(exp(2 * TrD[i]), 1))
           Observation <- matrix(c(rep(Time[FirstObs], 2),
                                   rep(ObsDistr[FirstObs], 2)),
                                 ncol = 2, nrow = 2)
         }
         if (!is.null(VarTraitE))
         {
-          TraitDSp <- cbind(1:2, c(exp(2 * TraitE[i]), 1))
+          TraitDSp <- cbind(1:2, c(exp(2 * TrE[i]), 1))
           Observation <- matrix(c(rep(Time[FirstObs], 2),
                                   rep(ObsDistr[FirstObs], 2)),
                                 ncol = 2, nrow = 2)
