@@ -9,10 +9,11 @@ get_DES_input <- function(SimDfBinned, Time, BinSize, Distribution = "state", Da
   colnames(DesInput)[-1] <- rev(BinnedTime)
   for(i in 1:Nspecies){
     Species <- SimDfBinned[SimDfBinned$Species == i, ]
-    S <- Species$stateSampling[-length(Species$stateSampling)]
+    SpeciesState <- Species[, Distribution]
+    S <- SpeciesState[-length(SpeciesState)]
     if(any(S > 1))
     {
-      From <- min(which(Species$stateSampling > 1))
+      From <- min(which(SpeciesState > 1))
       Species <- Species[From:nrow(Species), ]
       DesInput[i, 2 + Species$BinnedTimeIndex] <- Species[, Distribution] - 1 # 1:4 -> 0:3
     }

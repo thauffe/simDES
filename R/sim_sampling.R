@@ -26,13 +26,13 @@ sim_sampling <- function(SimDf, Pres, Nspecies, Step, Ncat, alpha, DataInArea)
   {
     DataInArea2 <- 0
   }
-  SA <- exp(-Step * PresA)
-  SB <- exp(-Step * PresB)
+  SA <- 1 - exp(-Step * PresA)
+  SB <- 1 - exp(-Step * PresB)
   SimDf$stateSampling <- 0
   # Area A
   W1 <- which(SimDf$state == 2)
   R1 <- runif(length(W1), 0, 1)
-  SimDf$stateSampling[W1] <- ifelse(R1 < SA[W1], 0, 1)
+  SimDf$stateSampling[W1] <- ifelse(R1 > SA[W1], 0, 1)
   if(DataInArea2 == 2)
   {
     SimDf$stateSampling[W1] <- 1
@@ -40,7 +40,7 @@ sim_sampling <- function(SimDf, Pres, Nspecies, Step, Ncat, alpha, DataInArea)
   # Area B
   W2 <- which(SimDf$state == 3)
   R2 <- runif(length(W2), 0, 1)
-  SimDf$stateSampling[W2] <- ifelse(R2 < SB[W2], 0, 2)
+  SimDf$stateSampling[W2] <- ifelse(R2 > SB[W2], 0, 2)
   if(DataInArea2 == 1)
   {
     SimDf$stateSampling[W2] <- 2
@@ -48,8 +48,8 @@ sim_sampling <- function(SimDf, Pres, Nspecies, Step, Ncat, alpha, DataInArea)
   # Area AB
   W3 <- which(SimDf$state == 4)
   LenW3 <- length(W3)
-  A <- ifelse(runif(LenW3, 0, 1) < SA[W3], 0, 1)
-  B <- ifelse(runif(LenW3, 0, 1) < SB[W3], 0, 2)
+  A <- ifelse(runif(LenW3, 0, 1) > SA[W3], 0, 1)
+  B <- ifelse(runif(LenW3, 0, 1) > SB[W3], 0, 2)
   if(DataInArea2 == 2)
   {
     A <- rep(1, LenW3)

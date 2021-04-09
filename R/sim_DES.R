@@ -133,7 +133,7 @@ sim_DES <- function(Time,
   TimeSim <- round(TimeSim, digits = Decimals)
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes,
                       Covariate, DataInArea, Ncat, Observation, GlobExt)
-  SimDf <- sim_core(SimDf, SimD, SimE,
+  SimDf <- sim_core2(SimDf, SimD, SimE,
                     VarD, VarE, DivD, DivE, DdE, Cor,
                     TraitD, VarTraitD, TraitE, VarTraitE)
   SimDf <- sim_sampling(SimDf, SimQ, Nspecies, Step, Ncat, alpha, DataInArea)
