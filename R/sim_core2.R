@@ -10,7 +10,9 @@ sim_core2 <- function(SimDf,
                       TraitD = NULL,
                       VarTraitD = NULL,
                       TraitE = NULL,
-                      VarTraitE = NULL)
+                      VarTraitE = NULL,
+                      CatTraitD = NULL,
+                      CatTraitE = NULL)
 {
   # Loop is not very efficient but the only way to
   # trace richnesses for diversity-dependence
@@ -127,23 +129,29 @@ sim_core2 <- function(SimDf,
       # Index <- SimDf$time %in% TimeCovered & SimDf$subject %in% Species
       # StatesBeforeTransition <- SimDf[Index, "state"]
       for (s in 1:length(Species)) {
+        Dtmp <- D # No cont or cat traits
+        Etmp <- E
         SpeciesTmp <- Species[s]
         StartTmp <- Start[s]
         if ( !is.null(VarTraitD) )
         {
-          Dtmp <- exp(log(D) + VarTraitD * TraitD[TraitD[, 1] == SpeciesTmp, 2])
+          Dtmp <- exp(log(Dtmp) + VarTraitD * TraitD[TraitD[, 1] == SpeciesTmp, 2])
           Dtmp[Dtmp < 0] <- 0
-        } else
+        }
+        if ( !is.null(CatTraitD) )
         {
-          Dtmp <- D
+          Dtmp <- Dtmp * CatTraitD[CatTraitD[, 1] == SpeciesTmp, 2]
+          Dtmp[Dtmp < 0] <- 0
         }
         if ( !is.null(VarTraitE) )
         {
-          Etmp <- exp(log(E) + VarTraitE * TraitE[TraitE[, 1] == SpeciesTmp, 2])
+          Etmp <- exp(log(Etmp) + VarTraitE * TraitE[TraitE[, 1] == SpeciesTmp, 2])
           Etmp[Etmp < 0] <- 0
-        }else
+        }
+        if ( !is.null(CatTraitE) )
         {
-          Etmp <- E
+          Etmp <- Etmp * CatTraitE[CatTraitE[, 1] == SpeciesTmp, 2]
+          Etmp[Etmp < 0] <- 0
         }
         Q <- make_Q(Dtmp, Etmp)
         IndexTmp <- SimDf$time %in% TimeCovered[2] & SimDf$subject %in% SpeciesTmp

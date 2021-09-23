@@ -30,6 +30,8 @@ sim_DES(
   VarTraitD = NULL,
   TraitE = NULL,
   VarTraitE = NULL,
+  CatTraitD = NULL,
+  CatTraitE = NULL,
   Verbose = FALSE
 )
 }
@@ -87,6 +89,10 @@ to simulate heterogeneous sampling or Inf for a random draw of the Gamma distrib
 \item{TraitE}{Continuous influencing extinction (first column taxon index and second the trait). See TraitD for details}
 
 \item{VarTraitE}{Strengths of trait dependent extinction}
+
+\item{CatTraitD}{Data.frame or matrix of the effect of a discrete trait on dispersal (first column taxon index and second the state-dependent multiplier of baseline rate; requires the same order as Observation).}
+
+\item{CatTraitE}{Data.frame or matrix of the effect of a discrete trait on extinction (first column taxon index and second the state-dependent multiplier of baseline rate; requires the same order as Observation).}
 
 \item{Verbose}{Should messages be printed?}
 }

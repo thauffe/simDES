@@ -31,6 +31,8 @@
 #' @param VarTraitD Strengths of trait dependent dispersal
 #' @param TraitE Continuous influencing extinction (first column taxon index and second the trait). See TraitD for details
 #' @param VarTraitE Strengths of trait dependent extinction
+#' @param CatTraitD Data.frame or matrix of the effect of a discrete trait on dispersal (first column taxon index and second the state-dependent multiplier of baseline rate; requires the same order as Observation).
+#' @param CatTraitE Data.frame or matrix of the effect of a discrete trait on extinction (first column taxon index and second the state-dependent multiplier of baseline rate; requires the same order as Observation).
 #' @param Verbose Should messages be printed?
 #'
 #' @return A list with four elements
@@ -63,6 +65,8 @@ sim_DES <- function(Time,
                     VarTraitD = NULL,
                     TraitE = NULL,
                     VarTraitE = NULL,
+                    CatTraitD = NULL,
+                    CatTraitE = NULL,
                     Verbose = FALSE)
 {
   if (Step > Time)
@@ -111,6 +115,10 @@ sim_DES <- function(Time,
   {
     stop("Ncat and alpha need to be provided for sampling heterogeneity")
   }
+  # if ( (!is.null(CatTraitD) || !is.null(CatTraitE)) && is.null(Observation))
+  # {
+  #   stop("Categorical effect require argument Observation")
+  # }
   if (!is.null(DataInArea) & is.null(Observation))
   {
     if (DataInArea == 1)
@@ -135,7 +143,7 @@ sim_DES <- function(Time,
                       Covariate, DataInArea, Ncat, Observation, GlobExt)
   SimDf <- sim_core2(SimDf, SimD, SimE,
                     VarD, VarE, DivD, DivE, DdE, Cor,
-                    TraitD, VarTraitD, TraitE, VarTraitE)
+                    TraitD, VarTraitD, TraitE, VarTraitE, CatTraitD, CatTraitE)
   SimDf <- sim_sampling(SimDf, SimQ, Nspecies, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
   DesInput <- get_DES_input(SimDfBinned, Time, BinSize,
@@ -169,13 +177,25 @@ sim_DES <- function(Time,
   {
     TraitD[, 1] <- paste0("SP_", TraitD[, 1])
     TraitD <- TraitD[TraitD[, 1] %in% DesInput$scientificName, ]
-    Res[[5]] <- TraitD
+    Res[[length(Res) + 1]] <- TraitD
   }
   if ( !is.null(VarTraitE) )
   {
     TraitE[, 1] <- paste0("SP_", TraitE[, 1])
     TraitE <- TraitE[TraitE[, 1] %in% DesInput$scientificName, ]
-    Res[[6]] <- TraitE
+    Res[[length(Res) + 1]] <- TraitE
+  }
+  if ( !is.null(CatTraitD) )
+  {
+    CatTraitD[, 1] <- paste0("SP_", CatTraitD[, 1])
+    CatTraitD <- CatTraitD[CatTraitD[, 1] %in% DesInput$scientificName, ]
+    Res[[length(Res) + 1]] <- CatTraitD
+  }
+  if ( !is.null(CatTraitE) )
+  {
+    CatTraitE[, 1] <- paste0("SP_", CatTraitE[, 1])
+    CatTraitE <- CatTraitE[CatTraitE[, 1] %in% DesInput$scientificName, ]
+    Res[[length(Res) + 1]] <- CatTraitE
   }
   return(Res)
 }
