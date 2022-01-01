@@ -56,10 +56,11 @@ sim_core2 <- function(SimDf,
         # Covariation with environment
         if (!is.null(VarD))
         {
-          CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], "cov"][1]
+          # CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], "cov"][1]
+          CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], grepl("CovDis", colnames(SimDf))][1, ]
           if (Cor == "exponential") # Exponential covariation
           {
-            D <- Dis * exp(VarD * CovTmp)
+            D <- Dis * exp(sum(VarD * CovTmp))
           } else # Logistic covariation
           {
             D <- Dis / (1 + exp(-VarD[1:2] * (CovTmp - VarD[3:4])))
@@ -93,10 +94,11 @@ sim_core2 <- function(SimDf,
         # Covariation with environment
         if (!is.null(VarE))
         {
-          CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], "cov"][1]
+          # CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], "cov"][1]
+          CovTmp <- SimDf[SimDf$time == UniqueTime[i - 1], grepl("CovExt", colnames(SimDf))][1, ]
           if (Cor == "exponential") # Exponential covariation
           {
-            E <- Ext * exp(VarE * CovTmp)
+            E <- Ext * exp(sum(VarE * CovTmp))
           } else # Logistic covariation
           {
             E <- Ext / (1 + exp(-VarE[1:2] * (CovTmp - VarE[3:4])))

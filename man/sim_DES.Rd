@@ -16,7 +16,8 @@ sim_DES(
   Origin = 0,
   VarD = NULL,
   VarE = NULL,
-  Covariate = NULL,
+  CovariateDis = NULL,
+  CovariateExt = NULL,
   DivD = NULL,
   DivE = NULL,
   DdE = NULL,
@@ -60,8 +61,8 @@ and in case of logistic correlation the midpoints}
 \item{VarE}{Strengths of covariate dependent extinction
 and in case of logistic correlation the midpoints}
 
-\item{Covariate}{data.frame with the covariate for
-e.g. environmental dependent dispersal or extinction}
+\item{CovariateExt}{List of a single or several data.frames with the covariate for
+e.g. environmental dependent extinction}
 
 \item{DivD}{Strengths of diversity dependent dispersal}
 
@@ -95,6 +96,9 @@ to simulate heterogeneous sampling or Inf for a random draw of the Gamma distrib
 \item{CatTraitE}{Data.frame or matrix of the effect of a discrete trait on extinction (first column taxon index and second the state-dependent multiplier of baseline rate; requires the same order as Observation).}
 
 \item{Verbose}{Should messages be printed?}
+
+\item{CovariateDisp}{List of a single or several data.frames with the covariate for
+e.g. environmental dependent dispersal}
 }
 \value{
 A list with four elements

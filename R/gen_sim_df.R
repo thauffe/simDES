@@ -7,8 +7,10 @@
 #' @param Nspecies Number of species
 #' @param Origin Area of origin \cr Options 'random', '1', or '2'
 #' @param Qtimes Shift times in dispersal, extinction, and sampling
-#' @param Covariate data.frame with the covariate for
-#' e.g. environmental dependent dispersal or extinction
+#' @param CovariateDisp List of a single or several data.frames with the covariate for
+#' e.g. environmental dependent dispersal
+#' @param CovariateExt List of a single or several data.frames with the covariate for
+#' e.g. environmental dependent extinction
 #' @param DataInArea Simulate dynamic in that area
 #' @param Ncat  Number of categories for the discretized Gamma distribution
 #' to simulate heterogeneous sampling
@@ -25,7 +27,8 @@ gen_sim_df <- function(TimeSim,
                        Nspecies,
                        Origin = "random",
                        Qtimes = NULL,
-                       Covariate = NULL,
+                       CovariateDis = NULL,
+                       CovariateExt = NULL,
                        DataInArea = NULL,
                        Ncat = NULL,
                        Observation = NULL,
@@ -33,9 +36,13 @@ gen_sim_df <- function(TimeSim,
 {
   LenTimeSim <- length(TimeSim)
   Time <- max(TimeSim)
-  if (!is.null(Covariate))
+  if (!is.null(CovariateDis))
   {
-    BinnedCov <- bin_covariate(TimeSim, Covariate)
+    BinnedCovDis <- bin_covariate(TimeSim, CovariateDis, c("CovDis12", "CovDis21"))
+  }
+  if (!is.null(CovariateExt))
+  {
+    BinnedCovExt <- bin_covariate(TimeSim, CovariateExt, c("CovExt1", "CovExt2"))
   }
 
   if (!is.null(Observation))
@@ -77,17 +84,28 @@ gen_sim_df <- function(TimeSim,
       StateObserved <- rep(FALSE, length(TimeSimSpecies))
     }
 
-    if (!is.null(Covariate))
+    if (!is.null(CovariateDis))
     {
       L <- length(TimeSimSpecies)
-      CovBinnedSpecies <- BinnedCov[(LenTimeSim - L + 1):LenTimeSim]
+      CovDisBinnedSpecies <- BinnedCovDis[(LenTimeSim - L + 1):LenTimeSim, ]
     } else
     {
-      CovBinnedSpecies <- NULL
+      CovDisBinnedSpecies <- NULL
+    }
+    if (!is.null(CovariateExt))
+    {
+      L <- length(TimeSimSpecies)
+      CovExtBinnedSpecies <- BinnedCovExt[(LenTimeSim - L + 1):LenTimeSim, ]
+    } else
+    {
+      CovExtBinnedSpecies <- NULL
     }
 
     SimList[[i]] <- gen_sim_df_cor(TimeSimSpecies, Origin, Species = i,
-                                   Qtimes, CovBinned = CovBinnedSpecies, Ncat,
+                                   Qtimes,
+                                   CovDisBinned = CovDisBinnedSpecies,
+                                   CovExtBinned = CovExtBinnedSpecies,
+                                   Ncat,
                                    StateObserved)
   }
   SimDf <- do.call("rbind", SimList)

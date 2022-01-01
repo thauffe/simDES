@@ -9,7 +9,8 @@ gen_sim_df(
   Nspecies,
   Origin = "random",
   Qtimes = NULL,
-  Covariate = NULL,
+  CovariateDis = NULL,
+  CovariateExt = NULL,
   DataInArea = NULL,
   Ncat = NULL,
   Observation = NULL,
@@ -25,8 +26,8 @@ gen_sim_df(
 
 \item{Qtimes}{Shift times in dispersal, extinction, and sampling}
 
-\item{Covariate}{data.frame with the covariate for
-e.g. environmental dependent dispersal or extinction}
+\item{CovariateExt}{List of a single or several data.frames with the covariate for
+e.g. environmental dependent extinction}
 
 \item{DataInArea}{Simulate dynamic in that area}
 
@@ -36,6 +37,9 @@ to simulate heterogeneous sampling}
 \item{Observation}{Two column matrix or data.frame of first observation time and area per species}
 
 \item{GlobExt}{Global extinction rate}
+
+\item{CovariateDisp}{List of a single or several data.frames with the covariate for
+e.g. environmental dependent dispersal}
 
 \item{alpha}{i.e. the shape and rate of the Gamma distribution}
 }

@@ -15,8 +15,10 @@
 #' and in case of logistic correlation the midpoints
 #' @param VarE Strengths of covariate dependent extinction
 #' and in case of logistic correlation the midpoints
-#' @param Covariate data.frame with the covariate for
-#' e.g. environmental dependent dispersal or extinction
+#' @param CovariateDisp List of a single or several data.frames with the covariate for
+#' e.g. environmental dependent dispersal
+#' @param CovariateExt List of a single or several data.frames with the covariate for
+#' e.g. environmental dependent extinction
 #' @param DivD Strengths of diversity dependent dispersal
 #' @param DivE Strengths of diversity dependent extinction
 #' @param DdE Strengths of dispersal dependent extinction
@@ -51,7 +53,8 @@ sim_DES <- function(Time,
                     Origin = 0,
                     VarD = NULL,
                     VarE = NULL,
-                    Covariate = NULL,
+                    CovariateDis = NULL,
+                    CovariateExt = NULL,
                     DivD = NULL,
                     DivE = NULL,
                     DdE = NULL,
@@ -99,7 +102,7 @@ sim_DES <- function(Time,
   {
     stop("Origin should be 0 (i.e. random) or any combination of 1, 2, and/or 3")
   }
-  if (any(Origin == 0))
+  if (Origin == 0)
   {
     Origin <- 1:3
   }
@@ -115,10 +118,6 @@ sim_DES <- function(Time,
   {
     stop("Ncat and alpha need to be provided for sampling heterogeneity")
   }
-  # if ( (!is.null(CatTraitD) || !is.null(CatTraitE)) && is.null(Observation))
-  # {
-  #   stop("Categorical effect require argument Observation")
-  # }
   if (!is.null(DataInArea) & is.null(Observation))
   {
     if (DataInArea == 1)
@@ -140,10 +139,10 @@ sim_DES <- function(Time,
   Decimals <- nchar(gsub("(.*\\.)|([0]*$)", "", as.character(Step)))
   TimeSim <- round(TimeSim, digits = Decimals)
   SimDf <- gen_sim_df(TimeSim, Nspecies, Origin, Qtimes,
-                      Covariate, DataInArea, Ncat, Observation, GlobExt)
+                      CovariateDis, CovariateExt, DataInArea, Ncat, Observation, GlobExt)
   SimDf <- sim_core2(SimDf, SimD, SimE,
-                    VarD, VarE, DivD, DivE, DdE, Cor,
-                    TraitD, VarTraitD, TraitE, VarTraitE, CatTraitD, CatTraitE)
+                     VarD, VarE, DivD, DivE, DdE, Cor,
+                     TraitD, VarTraitD, TraitE, VarTraitE, CatTraitD, CatTraitE)
   SimDf <- sim_sampling(SimDf, SimQ, Nspecies, Step, Ncat, alpha, DataInArea)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
   DesInput <- get_DES_input(SimDfBinned, Time, BinSize,
@@ -153,11 +152,12 @@ sim_DES <- function(Time,
   SimDf$time <- Time - SimDf$time
   SimDf$state <- as.numeric(SimDf$state) - 1
   SimDf$stateSampling <- as.numeric(SimDf$stateSampling) - 1
-  colnames(SimDf) <- c("Species", "Time", "RangeSim",
-                       "Covariate", "DiversityA", "DiversityB", "DiversityAB",
-                       "Strata", "RangeObs", "GammaCat",
-                       "rate_d12", "rate_d21", "rate_e1", "rate_e2",
-                       "num_d12", "num_d21", "StateObserved")
+  colnames(SimDf)[1:3] <- c("Species", "Time", "RangeSim")
+  L <- ncol(SimDf)
+  colnames(SimDf)[(L - 12):L] <- c("DiversityA", "DiversityB", "DiversityAB",
+                                   "Strata", "RangeObs", "GammaCat",
+                                   "rate_d12", "rate_d21", "rate_e1", "rate_e2",
+                                   "num_d12", "num_d21", "StateObserved")
   Res[[2]] <- SimDf
   Rich <- unique(SimDf[, c("Time", "DiversityA", "DiversityB", "DiversityAB")])
   Rich <- Rich[order(Rich$Time, decreasing = TRUE), ]

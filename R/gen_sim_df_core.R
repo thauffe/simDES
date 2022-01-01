@@ -2,24 +2,19 @@ gen_sim_df_cor <- function(TimeSim,
                            Origin,
                            Species = 1,
                            Qtimes = NULL,
-                           CovBinned = NULL,
+                           CovDisBinned = NULL,
+                           CovExtBinned = NULL,
                            Ncat = NULL,
                            StateObserved = FALSE)
 {
-  # TimeSim Time trajectory (vector)
-  # Origin Area of origin (character)
-  # CovBinned Binned covariate (vector)
-  # if (any(Origin == 0))
-  # {
-  #   Start <- sample(2:4, 1)
-  # } else
-  # {
-    Start <- resample(min(Origin):max(Origin), 1) + 1
-  # }
-
-  if (is.null(CovBinned))
+  Start <- resample(min(Origin):max(Origin), 1) + 1
+  if (is.null(CovDisBinned))
   {
-    CovBinned <- NA
+    CovDisBinned <- NA
+  }
+  if (is.null(CovExtBinned))
+  {
+    CovExtBinned <- NA
   }
   if (is.null(Ncat))
   {
@@ -33,7 +28,8 @@ gen_sim_df_cor <- function(TimeSim,
   {
     GammaCat <- sample(1:Ncat, 1)
   }
-  SimDf <- data.frame(subject = Species, time = TimeSim, state = Start, cov = CovBinned,
+  SimDf <- data.frame(subject = Species, time = TimeSim, state = Start,
+                      CovDisBinned, CovExtBinned,
                       DivA = 0, DivB = 0, DivAB = 0, Strata = 1,
                       stateSampling = NA_integer_,
                       GammaCat = GammaCat,
