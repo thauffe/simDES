@@ -25,13 +25,13 @@ sim_core2 <- function(SimDf,
   SimDf[IdxDiv, "DivAB"] <- sum(SimDf[IdxDiv, "state"] == 4)
   if ( !is.null(VarTraitD) )
   {
-    TraitD[, 2] <- log(TraitD[, 2])
-    TraitD[, 2] <- TraitD[, 2] - mean(TraitD[, 2])
+    TraitD[, 2:ncol(TraitD)] <- log(TraitD[, 2:ncol(TraitD)])
+    TraitD[, 2:ncol(TraitD)] <- TraitD[, 2:ncol(TraitD)] - colMeans(TraitD[, 2:ncol(TraitD), drop = FALSE])
   }
   if ( !is.null(VarTraitE) )
   {
-    TraitE[, 2] <- log(TraitE[, 2])
-    TraitE[, 2] <- TraitE[, 2] - mean(TraitE[, 2])
+    TraitE[, 2:ncol(TraitE)] <- log(TraitE[, 2:ncol(TraitE)])
+    TraitE[, 2:ncol(TraitE)] <- TraitE[, 2:ncol(TraitE)] - colMeans(TraitE[, 2:ncol(TraitE), drop = FALSE])
   }
   for(i in 2:length(UniqueTime))
   {
@@ -137,7 +137,8 @@ sim_core2 <- function(SimDf,
         StartTmp <- Start[s]
         if ( !is.null(VarTraitD) )
         {
-          Dtmp <- exp(log(Dtmp) + VarTraitD * TraitD[TraitD[, 1] == SpeciesTmp, 2])
+          # Dtmp <- exp(log(Dtmp) + VarTraitD * TraitD[TraitD[, 1] == SpeciesTmp, -1])
+          Dtmp <- Dtmp * exp(sum(VarTraitD * TraitD[TraitD[, 1] == SpeciesTmp, -1]))
           Dtmp[Dtmp < 0] <- 0
         }
         if ( !is.null(CatTraitD) )
@@ -147,7 +148,8 @@ sim_core2 <- function(SimDf,
         }
         if ( !is.null(VarTraitE) )
         {
-          Etmp <- exp(log(Etmp) + VarTraitE * TraitE[TraitE[, 1] == SpeciesTmp, 2])
+          # Etmp <- exp(log(Etmp) + VarTraitE * TraitE[TraitE[, 1] == SpeciesTmp, -1])
+          Etmp <- Etmp * exp(sum(VarTraitE * TraitE[TraitE[, 1] == SpeciesTmp, -1]))
           Etmp[Etmp < 0] <- 0
         }
         if ( !is.null(CatTraitE) )
