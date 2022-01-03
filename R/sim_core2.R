@@ -137,24 +137,22 @@ sim_core2 <- function(SimDf,
         StartTmp <- Start[s]
         if ( !is.null(VarTraitD) )
         {
-          # Dtmp <- exp(log(Dtmp) + VarTraitD * TraitD[TraitD[, 1] == SpeciesTmp, -1])
           Dtmp <- Dtmp * exp(sum(VarTraitD * TraitD[TraitD[, 1] == SpeciesTmp, -1]))
           Dtmp[Dtmp < 0] <- 0
         }
         if ( !is.null(CatTraitD) )
         {
-          Dtmp <- Dtmp * CatTraitD[CatTraitD[, 1] == SpeciesTmp, 2]
+          Dtmp <- Dtmp * sum(CatTraitD[CatTraitD[, 1] == SpeciesTmp, -1])
           Dtmp[Dtmp < 0] <- 0
         }
         if ( !is.null(VarTraitE) )
         {
-          # Etmp <- exp(log(Etmp) + VarTraitE * TraitE[TraitE[, 1] == SpeciesTmp, -1])
           Etmp <- Etmp * exp(sum(VarTraitE * TraitE[TraitE[, 1] == SpeciesTmp, -1]))
           Etmp[Etmp < 0] <- 0
         }
         if ( !is.null(CatTraitE) )
         {
-          Etmp <- Etmp * CatTraitE[CatTraitE[, 1] == SpeciesTmp, 2]
+          Etmp <- Etmp * sum(CatTraitE[CatTraitE[, 1] == SpeciesTmp, -1])
           Etmp[Etmp < 0] <- 0
         }
         Q <- make_Q(Dtmp, Etmp)
