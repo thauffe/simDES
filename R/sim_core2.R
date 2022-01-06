@@ -61,6 +61,15 @@ sim_core2 <- function(SimDf,
           D <- Dis / (1 + exp(-VarD[1:2] * (CovTmp - VarD[3:4])))
         }
       }
+      if (!is.null(DivD))
+      {
+        # Diversity dependent dispersal
+        # (less likely colonization if there are already many taxa in the sink area)
+        DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivB","DivA")][1, ]
+        DivTmp <- unlist(DivTmp)
+        D <- D * (1 - (DivTmp/DivD))
+        D[D < 0] <- 0
+      }
       # No covariation with extinction
       E <- Ext[IdxDES]
       # Covariation with environment
@@ -74,6 +83,19 @@ sim_core2 <- function(SimDf,
         {
           E <- Ext / (1 + exp(-VarE[1:2] * (CovTmp - VarE[3:4])))
         }
+      }
+      # Diversity dependent extinction
+      if (!is.null(DivE))
+      {
+        # Diversity dependent extinction
+        # (more likely extinction if there are already many taxa in the focal area)
+        DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
+        DivTmp <- unlist(DivTmp)
+        E2 <- E/(1 - (DivTmp/DivE))
+        MaxExt <- E / (1. - (DivE - 1e-5)/DivE)
+        NegExt <- E2 < 0 | is.infinite(E2)
+        E2[NegExt] <- MaxExt[NegExt]
+        E <- E2
       }
       # Dispersal dependent extinction
       if (!is.null(DdE))
@@ -102,15 +124,6 @@ sim_core2 <- function(SimDf,
           Dtmp <- Dtmp * sum(CatTraitD[CatTraitD[, 1] == SpeciesTmp, -1])
           Dtmp[Dtmp < 0] <- 0
         }
-        if (!is.null(DivD))
-        {
-          # Diversity dependent dispersal
-          # (less likely colonization if there are already many taxa in the sink area)
-          DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivB","DivA")][1, ]
-          DivTmp <- unlist(DivTmp)
-          Dtmp <- Dtmp * (1 - (DivTmp/DivD))
-          Dtmp[Dtmp < 0] <- 0
-        }
         DisMatBin[s, ] <- Dtmp
         if ( !is.null(VarTraitE) )
         {
@@ -121,19 +134,6 @@ sim_core2 <- function(SimDf,
         {
           Etmp <- Etmp * sum(CatTraitE[CatTraitE[, 1] == SpeciesTmp, -1])
           Etmp[Etmp < 0] <- 0
-        }
-        # Diversity dependent extinction
-        if (!is.null(DivE))
-        {
-          # Diversity dependent extinction
-          # (more likely extinction if there are already many taxa in the focal area)
-          DivTmp <- SimDf[SimDf$time == UniqueTime[i - 1], c("DivA","DivB")][1, ]
-          DivTmp <- unlist(DivTmp)
-          Etmp2 <- Etmp/(1 - (DivTmp/DivE))
-          MaxExt <- Etmp / (1. - (DivE - 1e-5)/DivE)
-          NegExt <- Etmp2 < 0 | is.infinite(Etmp2)
-          Etmp2[NegExt] <- MaxExt[NegExt]
-          Etmp <- Etmp2
         }
         ExtMatBin[s, ] <- Etmp
         Q <- make_Q(Dtmp, Etmp)
