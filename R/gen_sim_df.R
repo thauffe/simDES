@@ -79,7 +79,12 @@ gen_sim_df <- function(TimeSim,
       } else
       {
         TimeSimSpecies <- TimeSim
-        Origin <- DataInArea + 1
+        if (DataInArea == 1) {
+          Origin <- 2
+        }
+        if (DataInArea == 2) {
+          Origin <- 1
+        }
       }
       StateObserved <- rep(FALSE, length(TimeSimSpecies))
     }

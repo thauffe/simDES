@@ -27,7 +27,7 @@ get_DES_input <- function(SimDfBinned, Time, BinSize, Distribution = "state", Da
   {
     Keep <- apply(DesInputTrim, 1, function(x) any(x == 3, na.rm = TRUE))
     DesInput <- DesInput[Keep, ]
-    DesInput <- DesInput[, -2]
+    DesInput <- DesInput[, -1]
   }
   return(DesInput)
 }
