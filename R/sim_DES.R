@@ -33,8 +33,11 @@
 #' @param VarTraitD Strengths of trait dependent dispersal
 #' @param TraitE Continuous influencing extinction (first column taxon index and second the trait). See TraitD for details
 #' @param VarTraitE Strengths of trait dependent extinction
+#' @param TraitS Continuous influencing sampling (first column taxon index and second the trait). See TraitD for details
+#' @param VarTraitS Strengths of trait dependent sampling
 #' @param CatTraitD Data.frame or matrix of the effect of a discrete trait on dispersal (first column taxon index and second the state-dependent multiplier of baseline rate; requires the same order as Observation).
 #' @param CatTraitE Data.frame or matrix of the effect of a discrete trait on extinction (first column taxon index and second the state-dependent multiplier of baseline rate; requires the same order as Observation).
+#' @param CatTraitS Data.frame or matrix of the effect of a discrete trait on sampling (first column taxon index and second the state-dependent multiplier of baseline rate; requires the same order as Observation).
 #' @param Verbose Should messages be printed?
 #'
 #' @return A list with four elements
@@ -68,8 +71,11 @@ sim_DES <- function(Time,
                     VarTraitD = NULL,
                     TraitE = NULL,
                     VarTraitE = NULL,
+                    TraitS = NULL,
+                    VarTraitS = NULL,
                     CatTraitD = NULL,
                     CatTraitE = NULL,
+                    CatTraitS = NULL,
                     Verbose = FALSE)
 {
   if (Step > Time)
@@ -143,7 +149,7 @@ sim_DES <- function(Time,
   SimDf <- sim_core2(SimDf, SimD, SimE,
                      VarD, VarE, DivD, DivE, DdE, Cor,
                      TraitD, VarTraitD, TraitE, VarTraitE, CatTraitD, CatTraitE)
-  SimDf <- sim_sampling(SimDf, SimQ, Nspecies, Step, Ncat, alpha, DataInArea)
+  SimDf <- sim_sampling(SimDf, SimQ, Nspecies, Step, Ncat, alpha, DataInArea, TraitS, VarTraitS, CatTraitS)
   SimDfBinned <- bin_sim(SimDf, BinSize, TimeSim)
   DesInput <- get_DES_input(SimDfBinned, Time, BinSize,
                             Distribution = "stateSampling", DataInArea)
