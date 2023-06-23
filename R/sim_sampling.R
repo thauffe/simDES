@@ -1,4 +1,4 @@
-sim_sampling <- function (SimDf, Pres, Nspecies, Step, Ncat, alpha, DataInArea, TraitS, VarTraitS)
+sim_sampling <- function (SimDf, Pres, Nspecies, Step, Ncat, alpha, DataInArea, TraitS, VarTraitS, CatTraitS)
 {
   Idx <- ifelse(SimDf$Strata == 1, 2, 2 * SimDf$Strata)
   PresA <- Pres[Idx - 1]

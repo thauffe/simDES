@@ -191,6 +191,12 @@ sim_DES <- function(Time,
     TraitE <- TraitE[TraitE[, 1] %in% DesInput$scientificName, ]
     Res[[length(Res) + 1]] <- TraitE
   }
+  if ( !is.null(VarTraitS) )
+  {
+    TraitS[, 1] <- paste0("SP_", TraitS[, 1])
+    TraitS <- TraitS[TraitS[, 1] %in% DesInput$scientificName, ]
+    Res[[length(Res) + 1]] <- TraitS
+  }
   if ( !is.null(CatTraitD) )
   {
     CatTraitD[, 1] <- paste0("SP_", CatTraitD[, 1])
